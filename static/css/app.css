@@ -1,4 +1,301 @@
-/* Styles globaux légers — compléter au fil du projet */
-body {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+/* --------------------------------------------------------------------------
+   Plateforme projets etudiants — charte UI (Bootstrap 5 + surcharges)
+   -------------------------------------------------------------------------- */
+
+:root,
+[data-bs-theme="light"] {
+  --app-font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto,
+    sans-serif;
+  --app-bg: #f0f2f5;
+  --app-surface: #ffffff;
+  --app-border: rgba(15, 23, 42, 0.08);
+  --app-text: #0f172a;
+  --app-text-muted: #64748b;
+  --app-nav-from: #0f2744;
+  --app-nav-to: #1e4976;
+  --app-accent: #0d6efd;
+  --app-radius: 0.75rem;
+  --app-radius-sm: 0.5rem;
+  --app-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --app-shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+  --app-shadow-lg: 0 16px 40px rgba(15, 23, 42, 0.1);
+
+  /* Harmonise les boutons / liens avec la navbar */
+  --bs-primary: #1e5a8e;
+  --bs-primary-rgb: 30, 90, 142;
+  --bs-link-color: #1e5a8e;
+  --bs-link-hover-color: #164a73;
+  --bs-border-radius: var(--app-radius-sm);
+  --bs-body-bg: var(--app-bg);
+  --bs-body-color: var(--app-text);
+  --bs-secondary-color: var(--app-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --- Base --- */
+.app-body {
+  font-family: var(--app-font);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.app-body .app-main {
+  max-width: 1200px;
+}
+
+/* --- Accessibilite : lien d'evitement --- */
+.app-skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0.75rem;
+  z-index: 1080;
+  padding: 0.5rem 1rem;
+  background: var(--app-surface);
+  color: var(--app-text);
+  border-radius: var(--app-radius-sm);
+  box-shadow: var(--app-shadow-md);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.app-skip-link:focus {
+  left: 0.75rem;
+  outline: 2px solid var(--bs-primary);
+  outline-offset: 2px;
+}
+
+/* --- Navigation --- */
+.app-navbar {
+  background: linear-gradient(
+    120deg,
+    var(--app-nav-from) 0%,
+    var(--app-nav-to) 55%,
+    #2563a8 100%
+  ) !important;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.18);
+  padding-top: 0.65rem;
+  padding-bottom: 0.65rem;
+}
+
+.app-navbar .navbar-brand {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-size: 1.15rem;
+}
+
+.app-navbar .navbar-brand small {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 500;
+  opacity: 0.85;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.app-navbar .nav-link {
+  font-weight: 500;
+  padding: 0.5rem 0.75rem !important;
+  border-radius: var(--app-radius-sm);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.app-navbar .nav-link:hover,
+.app-navbar .nav-link:focus {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #fff !important;
+}
+
+.app-navbar .nav-link.active {
+  background-color: rgba(255, 255, 255, 0.18);
+}
+
+.app-navbar .btn-logout {
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem !important;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  background: transparent;
+  margin-left: 0.25rem;
+}
+
+.app-navbar .btn-logout:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #fff;
+}
+
+/* --- Titres de page --- */
+.app-page-header {
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--app-border);
+}
+
+.app-page-header h1,
+.app-page-header .app-page-title {
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--app-text);
+  margin-bottom: 0.35rem;
+}
+
+.app-page-header .lead,
+.app-page-header .text-muted {
+  max-width: 42rem;
+}
+
+/* --- Cartes & surfaces --- */
+.app-card {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border) !important;
+  border-radius: var(--app-radius) !important;
+  box-shadow: var(--app-shadow) !important;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.app-card:hover {
+  box-shadow: var(--app-shadow-md) !important;
+  border-color: rgba(30, 90, 142, 0.15) !important;
+}
+
+.app-stat-card {
+  border-radius: var(--app-radius) !important;
+  border: 1px solid var(--app-border) !important;
+  box-shadow: var(--app-shadow) !important;
+}
+
+.app-filter-panel {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.app-filter-panel .form-label {
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--app-text-muted);
+}
+
+/* --- Formulaires --- */
+.form-control:focus,
+.form-select:focus {
+  border-color: rgba(30, 90, 142, 0.45);
+  box-shadow: 0 0 0 0.2rem rgba(30, 90, 142, 0.15);
+}
+
+/* --- Boutons --- */
+.btn {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.btn-primary {
+  box-shadow: 0 2px 6px rgba(30, 90, 142, 0.25);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 4px 12px rgba(30, 90, 142, 0.3);
+}
+
+/* --- Alertes (flash) --- */
+.app-alerts .alert {
+  border: none;
+  border-radius: var(--app-radius-sm);
+  box-shadow: var(--app-shadow);
+}
+
+/* --- Pied de page --- */
+.app-footer {
+  background: var(--app-surface) !important;
+  border-top: 1px solid var(--app-border) !important;
+  color: var(--app-text-muted);
+  padding: 1.75rem 0;
+  margin-top: auto;
+}
+
+.app-footer a {
+  color: var(--app-text-muted);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.app-footer a:hover {
+  color: var(--bs-primary);
+}
+
+/* --- Page d'accueil hero --- */
+.app-hero {
+  background: linear-gradient(
+    135deg,
+    rgba(30, 90, 142, 0.08) 0%,
+    rgba(15, 39, 68, 0.06) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  padding: 2rem 1.75rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--app-shadow);
+}
+
+@media (min-width: 768px) {
+  .app-hero {
+    padding: 2.5rem 2.25rem;
+  }
+}
+
+/* --- Auth (connexion) --- */
+.app-auth-card {
+  border-radius: var(--app-radius) !important;
+  border: 1px solid var(--app-border) !important;
+  box-shadow: var(--app-shadow-md) !important;
+  overflow: hidden;
+}
+
+.app-auth-card .card-header {
+  background: linear-gradient(
+    120deg,
+    var(--app-nav-from),
+    var(--app-nav-to)
+  );
+  color: #fff;
+  font-weight: 700;
+  padding: 1.25rem 1.5rem;
+  border: none;
+}
+
+/* --- Listes / tableaux --- */
+.app-main .list-group-item {
+  border-color: var(--app-border);
+}
+
+.app-main .table thead th {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--app-text-muted);
+  font-weight: 700;
+  border-bottom-width: 1px;
+}
+
+/* --- Badges : leger relief --- */
+.badge {
+  font-weight: 600;
+  padding: 0.4em 0.65em;
 }

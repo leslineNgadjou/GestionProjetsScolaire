@@ -1,7 +1,85 @@
 {% extends "base.html" %}
+{% block nav_home_active %}active{% endblock %}
 {% block title %}Accueil — {{ block.super }}{% endblock %}
 {% block content %}
-  <h1 class="h3 mb-3">Bienvenue</h1>
-  <p class="lead">Fondation du projet : authentification, rôles et squelette des apps sont en place.</p>
-  <p>Prochaine étape : projets, candidatures et tableaux de bord par rôle.</p>
+  <div class="app-page-header">
+    <h1 class="h2 app-page-title">Bienvenue</h1>
+    <p class="lead text-muted mb-0">Publiez des projets, postulez en ligne et suivez vos candidatures en toute simplicité.</p>
+  </div>
+
+  <div class="app-hero">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-7">
+        <h2 class="h4 fw-bold mb-3">Une plateforme claire pour l’alternance projets / étudiants</h2>
+        <p class="text-body-secondary mb-0 mb-lg-3">
+          Les enseignants proposent des sujets structurés ; les étudiants déposent une motivation et suivent le statut de leur dossier. Les indicateurs du tableau de bord vous donnent une vision rapide de l’activité.
+        </p>
+      </div>
+      <div class="col-lg-5">
+        <div class="d-grid gap-2">
+          <a href="{% url 'projects:list' %}" class="btn btn-primary btn-lg">Parcourir les projets ouverts</a>
+          {% if user.is_authenticated %}
+            <a href="{% url 'dashboard:index' %}" class="btn btn-outline-primary btn-lg">Accéder au tableau de bord</a>
+          {% else %}
+            <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">Se connecter</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card app-card h-100">
+        <div class="card-body position-relative">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span class="rounded-circle bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center" style="width:2.5rem;height:2.5rem;" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm8 0A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3z"/></svg>
+            </span>
+            <h3 class="h6 mb-0 fw-bold">Projets</h3>
+          </div>
+          <p class="small text-body-secondary mb-3">Consultez les offres ouvertes, filtrez par domaine et accédez aux fiches détaillées.</p>
+          <a href="{% url 'projects:list' %}" class="btn btn-sm btn-outline-primary stretched-link position-relative">Voir le catalogue</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card app-card h-100">
+        <div class="card-body position-relative">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span class="rounded-circle bg-success bg-opacity-10 text-success d-inline-flex align-items-center justify-content-center" style="width:2.5rem;height:2.5rem;" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/></svg>
+            </span>
+            <h3 class="h6 mb-0 fw-bold">Candidatures</h3>
+          </div>
+          <p class="small text-body-secondary mb-3">Les étudiants postulent sur les projets ouverts ; les enseignants traitent les dossiers depuis l’espace dédié.</p>
+          {% if user.is_authenticated and user.is_student %}
+            <a href="{% url 'applications:mine' %}" class="btn btn-sm btn-outline-primary stretched-link position-relative">Mes candidatures</a>
+          {% elif user.is_authenticated and user.is_teacher %}
+            <a href="{% url 'applications:received' %}" class="btn btn-sm btn-outline-primary stretched-link position-relative">Candidatures reçues</a>
+          {% else %}
+            <span class="small text-muted">Connectez-vous pour accéder à vos dossiers.</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card app-card h-100">
+        <div class="card-body position-relative">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span class="rounded-circle bg-info bg-opacity-10 text-info d-inline-flex align-items-center justify-content-center" style="width:2.5rem;height:2.5rem;" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4zM3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.5 9.794 5.957 8.313a.389.389 0 0 0-.527.02L3.502 9.887a.389.389 0 0 0 .302.644h8.392a.389.389 0 0 0 .302-.644l-1.395-2.554z"/><path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/></svg>
+            </span>
+            <h3 class="h6 mb-0 fw-bold">Tableau de bord</h3>
+          </div>
+          <p class="small text-body-secondary mb-3">Statistiques et raccourcis adaptés à votre rôle : étudiant, enseignant ou administrateur.</p>
+          {% if user.is_authenticated %}
+            <a href="{% url 'dashboard:index' %}" class="btn btn-sm btn-outline-primary stretched-link position-relative">Ouvrir le dashboard</a>
+          {% else %}
+            <a href="{% url 'login' %}" class="btn btn-sm btn-outline-primary stretched-link position-relative">Connexion requise</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
