@@ -19,7 +19,12 @@ def error_404(request, exception):
 def error_403(request, exception=None):
     """Page 403 personnalisée."""
 
-    return render(request, 'errors/403.html', status=403)
+    context = {}
+    if exception is not None:
+        args = getattr(exception, 'args', ())
+        if args and args[0]:
+            context['exception_message'] = str(args[0])
+    return render(request, 'errors/403.html', context, status=403)
 
 
 def error_500(request):

@@ -1,16 +1,15 @@
 """Mixins transverses pour le controle d'acces (reutilisables par plusieurs apps)."""
 
-from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.shortcuts import redirect
+from django.core.exceptions import PermissionDenied
 
 
 class TeacherRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
     """
     Reserve la vue aux utilisateurs authentifies dont le role est enseignant.
 
-    Les utilisateurs connectes mais non enseignants sont rediriges vers la liste
-    publique des projets avec un message d'erreur.
+    Utilisateur connecte avec un autre role : 403 (PermissionDenied).
+    Anonyme : redirection vers la page de connexion (comportement LoginRequiredMixin).
     """
 
     def test_func(self):
@@ -22,18 +21,16 @@ class TeacherRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
     def handle_no_permission(self):
         if not self.request.user.is_authenticated:
             return super().handle_no_permission()
-        messages.error(
-            self.request,
-            "Accès réservé aux enseignants.",
+        raise PermissionDenied(
+            'Accès réservé aux enseignants.',
         )
-        return redirect('projects:list')
 
 
 class StudentRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
     """
     Reserve la vue aux utilisateurs authentifies dont le role est etudiant.
 
-    Les autres roles connectes sont rediriges vers la liste publique des projets.
+    Utilisateur connecte avec un autre role : 403 (PermissionDenied).
     """
 
     def test_func(self):
@@ -45,8 +42,6 @@ class StudentRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
     def handle_no_permission(self):
         if not self.request.user.is_authenticated:
             return super().handle_no_permission()
-        messages.error(
-            self.request,
+        raise PermissionDenied(
             'Accès réservé aux étudiants.',
         )
-        return redirect('projects:list')

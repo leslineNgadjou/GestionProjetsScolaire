@@ -58,6 +58,9 @@
               </form>
             </li>
           {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'register' %}">Inscription</a>
+            </li>
             <li class="nav-item ms-lg-2">
               <a class="btn btn-light btn-sm fw-semibold px-3 rounded-pill" href="{% url 'login' %}">Connexion</a>
             </li>

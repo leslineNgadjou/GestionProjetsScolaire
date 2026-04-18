@@ -4,6 +4,9 @@
   <div class="app-error-page text-center py-5 px-3 mx-auto" style="max-width: 36rem;">
     <p class="text-uppercase small text-muted fw-bold mb-2 letter-spacing">Erreur 403</p>
     <h1 class="h2 fw-bold mb-3">Accès refusé</h1>
+    {% if exception_message %}
+      <p class="text-body-secondary mb-3">{{ exception_message }}</p>
+    {% endif %}
     <p class="text-muted mb-4">
       Vous n’avez pas l’autorisation d’accéder à cette page ou de réaliser cette action.
       Si vous pensez qu’il s’agit d’une erreur, contactez un administrateur.

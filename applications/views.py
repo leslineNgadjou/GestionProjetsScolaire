@@ -60,7 +60,7 @@ class ReceivedApplicationsListView(TeacherRequiredMixin, ListView):
     model = Application
     template_name = 'applications/received_applications.html'
     context_object_name = 'applications'
-    paginate_by = 15
+    paginate_by = 10
 
     def get_queryset(self):
         return (

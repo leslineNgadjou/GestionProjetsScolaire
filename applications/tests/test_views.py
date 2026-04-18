@@ -125,3 +125,57 @@ class TeacherApplicationAccessTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.application.refresh_from_db()
         self.assertEqual(self.application.status, Application.Status.ACCEPTED)
+
+    def test_owner_can_reject(self):
+        self.client.login(username='t_owner', password='password123')
+        url = reverse('applications:reject', kwargs={'pk': self.application.pk})
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 302)
+        self.application.refresh_from_db()
+        self.assertEqual(self.application.status, Application.Status.REJECTED)
+
+    def test_accept_fails_when_max_students_reached(self):
+        self.project.max_students = 1
+        self.project.save()
+        other_student = User.objects.create_user(
+            username='s_slot_taken',
+            email='s_slot@univ.fr',
+            password='password123',
+            role=User.Role.STUDENT,
+        )
+        Application.objects.create(
+            student=other_student,
+            project=self.project,
+            motivation=MOTIVATION,
+            status=Application.Status.ACCEPTED,
+        )
+        self.client.login(username='t_owner', password='password123')
+        url = reverse('applications:accept', kwargs={'pk': self.application.pk})
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 302)
+        self.application.refresh_from_db()
+        self.assertEqual(self.application.status, Application.Status.PENDING)
+
+
+class StudentForbiddenTeacherApplicationViewsTests(TestCase):
+    """Un etudiant ne peut pas acceder aux vues enseignant (403)."""
+
+    def setUp(self):
+        self.client = Client()
+        self.teacher = User.objects.create_user(
+            username='t_forbid',
+            email='t_forbid@univ.fr',
+            password='password123',
+            role=User.Role.TEACHER,
+        )
+        self.student = User.objects.create_user(
+            username='s_forbid',
+            email='s_forbid@univ.fr',
+            password='password123',
+            role=User.Role.STUDENT,
+        )
+
+    def test_student_gets_403_on_received_applications(self):
+        self.client.login(username='s_forbid', password='password123')
+        response = self.client.get(reverse('applications:received'))
+        self.assertEqual(response.status_code, 403)
