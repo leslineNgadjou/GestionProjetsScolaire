@@ -2,10 +2,18 @@
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class User(AbstractUser):
     """Utilisateur de la plateforme (étudiant, enseignant ou admin métier)."""
+
+    email = models.EmailField(
+        _('adresse e-mail'),
+        blank=True,
+        max_length=254,
+        unique=True,
+    )
 
     class Role(models.TextChoices):
         STUDENT = 'student', 'Étudiant'

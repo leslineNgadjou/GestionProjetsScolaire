@@ -6,6 +6,9 @@
       <a href="{% url 'applications:mine' %}" class="text-decoration-none small">← Mes candidatures</a>
     {% elif user.is_teacher %}
       <a href="{% url 'applications:received' %}" class="text-decoration-none small">← Candidatures reçues</a>
+    {% elif user.is_platform_admin %}
+      <a href="{% url 'dashboard:index' %}" class="text-decoration-none small">← Tableau de bord</a>
+      <span class="badge text-bg-secondary">Supervision — lecture seule</span>
     {% endif %}
     <span class="small text-muted ms-auto">{% include "applications/_application_status_badge.html" with status=application.status %}</span>
   </div>
@@ -13,6 +16,9 @@
   <div class="card app-card mb-4">
     <div class="card-body p-4">
   <h1 class="h4 mb-3 app-page-title">Candidature</h1>
+  {% if user.is_platform_admin %}
+    <p class="small text-muted mb-3">Consultation réservée à l’administrateur métier — aucune action sur le dossier (traitement par l’enseignant responsable).</p>
+  {% endif %}
 
   <dl class="row mb-4 small mb-lg-0">
     <dt class="col-sm-4 col-md-3 text-muted">Projet</dt>

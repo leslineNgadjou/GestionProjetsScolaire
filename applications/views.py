@@ -140,7 +140,13 @@ class ApplicationCreateView(StudentRequiredMixin, CreateView):
 
 
 class ApplicationDetailView(LoginRequiredMixin, DetailView):
-    """Detail : etudiant (sa candidature) ou enseignant (candidature sur son projet)."""
+    """
+    Détail candidature :
+
+    - étudiant : uniquement ses dossiers ;
+    - enseignant : candidatures sur ses projets ;
+    - administrateur métier : tous les dossiers en lecture seule (pas d'action accepter/refuser).
+    """
 
     model = Application
     template_name = 'applications/application_detail.html'
@@ -153,6 +159,8 @@ class ApplicationDetailView(LoginRequiredMixin, DetailView):
             'student',
             'project__teacher',
         )
+        if getattr(user, 'is_platform_admin', False):
+            return qs
         if getattr(user, 'is_student', False):
             return qs.filter(student=user)
         if getattr(user, 'is_teacher', False):

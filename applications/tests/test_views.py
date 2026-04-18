@@ -179,3 +179,58 @@ class StudentForbiddenTeacherApplicationViewsTests(TestCase):
         self.client.login(username='s_forbid', password='password123')
         response = self.client.get(reverse('applications:received'))
         self.assertEqual(response.status_code, 403)
+
+
+class PlatformAdminApplicationAccessTests(TestCase):
+    """Administrateur metier : detail candidature en lecture seule, sans actions enseignant."""
+
+    def setUp(self):
+        self.client = Client()
+        self.owner = User.objects.create_user(
+            username='t_adm_ctx',
+            email='t_adm_ctx@univ.fr',
+            password='password123',
+            role=User.Role.TEACHER,
+        )
+        self.admin = User.objects.create_user(
+            username='a_platform',
+            email='a_platform@univ.fr',
+            password='password123',
+            role=User.Role.ADMIN,
+        )
+        self.student = User.objects.create_user(
+            username='s_adm_ctx',
+            email='s_adm_ctx@univ.fr',
+            password='password123',
+            role=User.Role.STUDENT,
+        )
+        self.project = Project.objects.create(
+            title='Projet pour admin',
+            description='d',
+            teacher=self.owner,
+            domain='X',
+            max_students=5,
+            status=Project.Status.OPEN,
+        )
+        self.application = Application.objects.create(
+            student=self.student,
+            project=self.project,
+            motivation=MOTIVATION,
+            status=Application.Status.PENDING,
+        )
+
+    def test_platform_admin_can_view_application_detail(self):
+        self.client.login(username='a_platform', password='password123')
+        url = reverse('applications:detail', kwargs={'pk': self.application.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Projet pour admin')
+        self.assertContains(response, 'lecture seule')
+
+    def test_platform_admin_cannot_accept_application(self):
+        self.client.login(username='a_platform', password='password123')
+        url = reverse('applications:accept', kwargs={'pk': self.application.pk})
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 403)
+        self.application.refresh_from_db()
+        self.assertEqual(self.application.status, Application.Status.PENDING)

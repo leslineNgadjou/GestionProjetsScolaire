@@ -4,7 +4,7 @@ Document de synthèse pour reprise par un correcteur. Légende : **Fait** | **Pa
 
 | Exigence (sujet) | Statut | Fichiers / emplacement | Remarque |
 |------------------|--------|-------------------------|----------|
-| Authentification (login / logout / inscription étudiant) | **Fait** | `config/urls.py`, `users/forms.py`, `users/views.py`, `templates/registration/login.html`, `register.html`, `settings.py` (`LOGIN_*`) | Inscription `/register/` : `UserCreationForm` + `EmailField` (format + unicité insensible à la casse), validateurs mot de passe Django, rôle `student` imposé, message flash + redirection dashboard (session ouverte). |
+| Authentification (login / logout / inscription étudiant) | **Fait** | `config/urls.py`, `users/forms.py`, `users/views.py`, `users/models.py` (`email` **unique** en base), `templates/registration/login.html`, `register.html`, `settings.py` (`LOGIN_*`) | Inscription : validation formulaire + contrainte SQL sur `email` ; migration `0002` déduplique les données existantes avant l’index unique. |
 | Rôles utilisateur (étudiant, enseignant, admin métier) | **Fait** | `users/models.py`, `core/mixins.py` | Distinct de `is_staff` / superuser Django. |
 | CRUD projets réservé enseignant + propriétaire | **Fait** | `projects/views.py`, `projects/mixins.py` | Mise à jour / suppression : queryset filtré. |
 | Liste publique projets **ouverts** uniquement | **Fait** | `projects/views.py` (`ProjectListView`) | |
@@ -12,7 +12,7 @@ Document de synthèse pour reprise par un correcteur. Légende : **Fait** | **Pa
 | Détail projet | **Fait** | `projects/views.py`, `project_detail.html` | Enseignant voit aussi ses projets non ouverts. |
 | Candidature étudiant sur projet ouvert | **Fait** | `applications/views.py`, `applications/models.py` | |
 | Une candidature par couple étudiant / projet | **Fait** | `Application` `UniqueConstraint`, tests | |
-| Liste / traitement candidatures par enseignant propriétaire | **Fait** | `applications/views.py`, `queryset` filtré | |
+| Liste / traitement candidatures par enseignant propriétaire | **Fait** | `applications/views.py`, `queryset` filtré | **Admin métier** : accès au **détail** de toute candidature en **lecture seule** ; accepter/refuser restent réservés à l’enseignant (`TeacherRequiredMixin`). |
 | Accepter / refuser + statuts pending / accepted / rejected | **Fait** | `AcceptApplicationView`, `RejectApplicationView` | |
 | Limite `max_students` à l’acceptation | **Fait** | `applications/views.py`, `Project.can_accept_more_students()` | Transaction + `select_for_update`. |
 | Notifications simulées | **Fait** | `django.contrib.messages`, `logging` logger `applications`, `settings.LOGGING` | Pas d’e-mail (conforme sujet « simulé »). |

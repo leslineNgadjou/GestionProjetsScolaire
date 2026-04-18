@@ -77,6 +77,8 @@ ALLOWED_HOSTS=localhost,127.0.0.1
 python manage.py migrate
 ```
 
+> La migration `users.0002_user_email_unique` impose l’**unicité de l’e-mail** (index en base). Si d’anciennes lignes avaient le même e-mail ou un e-mail vide, elles sont corrigées automatiquement avant l’index (voir la migration).
+
 ### 6. Données de démonstration (recommandé)
 
 Commande personnalisée **idempotente** (rejouable avant une soutenance) :
@@ -115,7 +117,7 @@ Les autres comptes créés par `seed_demo` utilisent le même mot de passe ; voi
 
 ## Fonctionnalités principales
 
-- Authentification Django, rôles sur `users.User` (étudiant / enseignant / admin métier) ; **inscription étudiant** sur `/register/` (nom d’utilisateur, **e-mail validé**, mot de passe avec validateurs Django, rôle étudiant uniquement).
+- Authentification Django, rôles sur `users.User` (étudiant / enseignant / admin métier) ; **inscription étudiant** sur `/register/` (nom d’utilisateur, **e-mail validé**, **unicité garantie en base de données**, mot de passe avec validateurs Django, rôle étudiant uniquement).
 - **Projets** : liste publique filtrée (statut **ouvert**), recherche, filtre domaine, pagination ; détail ; CRUD réservé à l’enseignant propriétaire.
 - **Candidatures** : dépôt sur projet ouvert, liste « mes candidatures », réception et traitement par l’enseignant concerné, respect de `max_students` à l’acceptation.
 - **Dashboard** : statistiques et raccourcis selon le rôle.
