@@ -51,3 +51,5 @@ class DashboardViewTests(TestCase):
         response = self.client.get(reverse('dashboard:index'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'administrateur', status_code=200)
+        self.assertContains(response, 'Synthèse visuelle', status_code=200)
+        self.assertContains(response, 'admin-chart-users-data', status_code=200)

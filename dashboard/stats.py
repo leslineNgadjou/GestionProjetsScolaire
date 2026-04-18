@@ -83,6 +83,30 @@ def admin_dashboard_context(_user):
         accepted=Count('pk', filter=Q(status=Application.Status.ACCEPTED)),
         rejected=Count('pk', filter=Q(status=Application.Status.REJECTED)),
     )
+    admin_chart_users = {
+        'labels': ['Étudiants', 'Enseignants', 'Administrateurs'],
+        'values': [
+            user_stats['students'],
+            user_stats['teachers'],
+            user_stats['admins'],
+        ],
+    }
+    admin_chart_applications = {
+        'labels': ['En attente', 'Acceptées', 'Refusées'],
+        'values': [
+            application_stats['pending'],
+            application_stats['accepted'],
+            application_stats['rejected'],
+        ],
+    }
+    admin_chart_projects = {
+        'labels': ['Ouverts', 'Fermés', 'Terminés'],
+        'values': [
+            project_stats['open_count'],
+            project_stats['closed_count'],
+            project_stats['completed_count'],
+        ],
+    }
     return {
         'dashboard_role': 'admin',
         'dashboard_title': 'Tableau de bord administrateur',
@@ -90,6 +114,9 @@ def admin_dashboard_context(_user):
         'user_stats': user_stats,
         'project_stats': project_stats,
         'application_stats': application_stats,
+        'admin_chart_users': admin_chart_users,
+        'admin_chart_applications': admin_chart_applications,
+        'admin_chart_projects': admin_chart_projects,
     }
 
 

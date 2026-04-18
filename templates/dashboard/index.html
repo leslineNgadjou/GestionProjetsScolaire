@@ -12,7 +12,7 @@
 
   {% if dashboard_role == 'student' %}
     <section class="mb-4" aria-label="Statistiques candidatures">
-      <h2 class="h5 mb-3">Vos candidatures</h2>
+      <h2 class="h5 mb-3 app-section-heading">Vos candidatures</h2>
       <div class="row g-3">
         <div class="col-6 col-md-3">
           <div class="card app-stat-card h-100">
@@ -50,13 +50,13 @@
     </section>
 
     <div class="d-flex flex-wrap gap-2 mb-4">
-      <a href="{% url 'applications:mine' %}" class="btn btn-primary">Mes candidatures</a>
-      <a href="{% url 'projects:list' %}" class="btn btn-outline-primary">Parcourir les projets</a>
+      <a href="{% url 'applications:mine' %}" class="btn btn-primary btn-lg">Mes candidatures</a>
+      <a href="{% url 'projects:list' %}" class="btn btn-outline-primary btn-lg">Parcourir les projets</a>
     </div>
 
     {% if recent_applications %}
       <section aria-label="Candidatures récentes">
-        <h2 class="h5 mb-3">Récentes</h2>
+        <h2 class="h5 mb-3 app-section-heading">Récentes</h2>
         <div class="list-group shadow-sm">
           {% for app in recent_applications %}
             <a href="{% url 'applications:detail' app.pk %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-start flex-wrap gap-2">
@@ -73,7 +73,7 @@
 
   {% elif dashboard_role == 'teacher' %}
     <section class="mb-4" aria-label="Statistiques projets">
-      <h2 class="h5 mb-3">Vos projets</h2>
+      <h2 class="h5 mb-3 app-section-heading">Vos projets</h2>
       <div class="row g-3">
         <div class="col-6 col-md-4 col-xl-2">
           <div class="card app-stat-card h-100"><div class="card-body text-center py-3">
@@ -99,7 +99,7 @@
     </section>
 
     <section class="mb-4" aria-label="Statistiques candidatures reçues">
-      <h2 class="h5 mb-3">Candidatures reçues</h2>
+      <h2 class="h5 mb-3 app-section-heading">Candidatures reçues</h2>
       <div class="row g-3">
         <div class="col-6 col-md-3">
           <div class="card app-stat-card h-100"><div class="card-body text-center">
@@ -125,8 +125,8 @@
     </section>
 
     <div class="d-flex flex-wrap gap-2 mb-4">
-      <a href="{% url 'projects:my_list' %}" class="btn btn-primary">Mes projets</a>
-      <a href="{% url 'projects:create' %}" class="btn btn-success">Créer un projet</a>
+      <a href="{% url 'projects:my_list' %}" class="btn btn-primary btn-lg">Mes projets</a>
+      <a href="{% url 'projects:create' %}" class="btn btn-success btn-lg">Créer un projet</a>
       <a href="{% url 'applications:received' %}" class="btn btn-outline-primary">Candidatures reçues</a>
       <a href="{% url 'projects:list' %}" class="btn btn-outline-secondary">Catalogue public</a>
     </div>
@@ -165,7 +165,7 @@
 
   {% elif dashboard_role == 'admin' %}
     <section class="mb-4" aria-label="Utilisateurs">
-      <h2 class="h5 mb-3">Utilisateurs</h2>
+      <h2 class="h5 mb-3 app-section-heading">Utilisateurs</h2>
       <div class="row g-3">
         <div class="col-6 col-md-3">
           <div class="card app-stat-card h-100"><div class="card-body text-center">
@@ -191,7 +191,7 @@
     </section>
 
     <section class="mb-4" aria-label="Projets">
-      <h2 class="h5 mb-3">Projets</h2>
+      <h2 class="h5 mb-3 app-section-heading">Projets</h2>
       <div class="row g-3">
         <div class="col-6 col-md-4">
           <div class="card app-stat-card h-100"><div class="card-body text-center">
@@ -214,7 +214,7 @@
     </section>
 
     <section class="mb-4" aria-label="Candidatures">
-      <h2 class="h5 mb-3">Candidatures (toute la plateforme)</h2>
+      <h2 class="h5 mb-3 app-section-heading">Candidatures (toute la plateforme)</h2>
       <div class="row g-3">
         <div class="col-6 col-md-3">
           <div class="card app-stat-card h-100"><div class="card-body text-center">
@@ -239,11 +239,51 @@
       </div>
     </section>
 
+    <section class="mb-4" aria-label="Graphiques synthétiques">
+      <h2 class="h5 mb-2 app-section-heading">Synthèse visuelle</h2>
+      <p class="text-muted small mb-3">Répartition des comptes, des projets et des candidatures (données agrégées côté serveur).</p>
+      <div class="row g-3">
+        <div class="col-12 col-lg-4">
+          <div class="card app-stat-card h-100">
+            <div class="card-body">
+              <h3 class="h6 text-muted text-uppercase small mb-0">Utilisateurs par rôle</h3>
+              <div class="admin-chart-wrap mt-3">
+                <canvas id="adminChartUsers" aria-label="Graphique utilisateurs par rôle"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-4">
+          <div class="card app-stat-card h-100">
+            <div class="card-body">
+              <h3 class="h6 text-muted text-uppercase small mb-0">Candidatures par statut</h3>
+              <div class="admin-chart-wrap mt-3">
+                <canvas id="adminChartApplications" aria-label="Graphique candidatures par statut"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-4">
+          <div class="card app-stat-card h-100">
+            <div class="card-body">
+              <h3 class="h6 text-muted text-uppercase small mb-0">Projets par statut</h3>
+              <div class="admin-chart-wrap mt-3">
+                <canvas id="adminChartProjects" aria-label="Graphique projets par statut"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    {{ admin_chart_users|json_script:"admin-chart-users-data" }}
+    {{ admin_chart_applications|json_script:"admin-chart-applications-data" }}
+    {{ admin_chart_projects|json_script:"admin-chart-projects-data" }}
+
     <div class="d-flex flex-wrap gap-2">
       {% if show_django_admin_link %}
-        <a href="{% url 'admin:index' %}" class="btn btn-dark">Administration Django</a>
+        <a href="{% url 'admin:index' %}" class="btn btn-dark btn-lg">Administration Django</a>
       {% endif %}
-      <a href="{% url 'projects:list' %}" class="btn btn-outline-primary">Projets (public)</a>
+      <a href="{% url 'projects:list' %}" class="btn btn-outline-primary btn-lg">Projets (public)</a>
     </div>
     {% if not show_django_admin_link %}
       <p class="small text-muted mt-2 mb-0">Le lien vers l’admin Django apparaît si votre compte a le statut <em>staff</em>.</p>
@@ -251,6 +291,64 @@
 
   {% else %}
     <p class="text-muted">{{ dashboard_subtitle }}</p>
-    <a href="{% url 'projects:list' %}" class="btn btn-primary">Voir les projets</a>
+    <a href="{% url 'projects:list' %}" class="btn btn-primary btn-lg">Voir les projets</a>
+  {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+  {% if dashboard_role == 'admin' %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js" crossorigin="anonymous"></script>
+    <script>
+      (function () {
+        var palette = ['#1e5a8e', '#198754', '#fd7e14', '#6c757d', '#0dcaf0', '#842029'];
+
+        function readPayload(scriptId) {
+          var el = document.getElementById(scriptId);
+          if (!el) return null;
+          try {
+            return JSON.parse(el.textContent);
+          } catch (e) {
+            return null;
+          }
+        }
+
+        function renderDoughnut(canvasId, scriptId) {
+          var canvas = document.getElementById(canvasId);
+          var payload = readPayload(scriptId);
+          if (!canvas || !payload || typeof Chart === 'undefined') return;
+          var ctx = canvas.getContext('2d');
+          var n = payload.labels.length;
+          var colors = palette.slice(0, n);
+          new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+              labels: payload.labels,
+              datasets: [{
+                data: payload.values,
+                backgroundColor: colors,
+                borderWidth: 2,
+                borderColor: '#ffffff',
+              }],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: 'bottom',
+                  labels: { boxWidth: 12, font: { size: 11 } },
+                },
+              },
+            },
+          });
+        }
+
+        if (document.getElementById('adminChartUsers')) {
+          renderDoughnut('adminChartUsers', 'admin-chart-users-data');
+          renderDoughnut('adminChartApplications', 'admin-chart-applications-data');
+          renderDoughnut('adminChartProjects', 'admin-chart-projects-data');
+        }
+      })();
+    </script>
   {% endif %}
 {% endblock %}
