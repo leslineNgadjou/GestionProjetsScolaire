@@ -1,93 +1,90 @@
 {% extends "base.html" %}
 {% block title %}{{ project.title }} — {{ block.super }}{% endblock %}
 {% block content %}
-  <div class="mb-3">
-    <a href="{% url 'projects:list' %}" class="text-decoration-none small fw-semibold">← Retour au catalogue</a>
-  </div>
+  <a href="{% url 'projects:list' %}" class="app-back-link">← Retour au catalogue</a>
 
-  <article class="pb-3 card app-card">
+  <article class="card app-card mb-4">
     <div class="card-body p-4 p-lg-5">
-    <header class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-2 mb-3">
-      <h1 class="h2 mb-0 app-page-title">{{ project.title }}</h1>
-      {% include "projects/_status_badge.html" with status=project.status %}
-    </header>
+      <header class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-3 mb-4">
+        <div>
+          <h1 class="h2 mb-2 app-page-title" style="letter-spacing: -0.03em;">{{ project.title }}</h1>
+          <p class="text-body-secondary small mb-0">{{ project.domain }} · {{ project.teacher.get_full_name|default:project.teacher.username }}</p>
+        </div>
+        {% include "projects/_status_badge.html" with status=project.status %}
+      </header>
 
-    <dl class="row mb-0">
-      <dt class="col-sm-4 col-md-3 text-muted">Domaine</dt>
-      <dd class="col-sm-8 col-md-9">{{ project.domain }}</dd>
-      <dt class="col-sm-4 col-md-3 text-muted">Enseignant</dt>
-      <dd class="col-sm-8 col-md-9">{{ project.teacher.get_full_name|default:project.teacher.username }}</dd>
-      <dt class="col-sm-4 col-md-3 text-muted">Places maximum</dt>
-      <dd class="col-sm-8 col-md-9">{{ project.max_students }}</dd>
-      <dt class="col-sm-4 col-md-3 text-muted">Créé le</dt>
-      <dd class="col-sm-8 col-md-9">{{ project.created_at|date:"d/m/Y à H:i" }}</dd>
-      <dt class="col-sm-4 col-md-3 text-muted">Mis à jour</dt>
-      <dd class="col-sm-8 col-md-9">{{ project.updated_at|date:"d/m/Y à H:i" }}</dd>
-    </dl>
+      <dl class="row mb-0 g-3">
+        <dt class="col-sm-4 col-md-3 text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.04em;">Domaine</dt>
+        <dd class="col-sm-8 col-md-9 mb-0">{{ project.domain }}</dd>
+        <dt class="col-sm-4 col-md-3 text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.04em;">Enseignant</dt>
+        <dd class="col-sm-8 col-md-9 mb-0">{{ project.teacher.get_full_name|default:project.teacher.username }}</dd>
+        <dt class="col-sm-4 col-md-3 text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.04em;">Places max.</dt>
+        <dd class="col-sm-8 col-md-9 mb-0">{{ project.max_students }}</dd>
+        <dt class="col-sm-4 col-md-3 text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.04em;">Créé le</dt>
+        <dd class="col-sm-8 col-md-9 mb-0">{{ project.created_at|date:"d/m/Y à H:i" }}</dd>
+        <dt class="col-sm-4 col-md-3 text-muted small fw-semibold text-uppercase" style="letter-spacing: 0.04em;">Mis à jour</dt>
+        <dd class="col-sm-8 col-md-9 mb-0">{{ project.updated_at|date:"d/m/Y à H:i" }}</dd>
+      </dl>
 
-    <hr class="my-4">
+      <hr class="my-4 opacity-25">
 
-    <h2 class="h5">Description</h2>
-    <div class="text-body-secondary lh-lg">{{ project.description|linebreaks }}</div>
+      <h2 class="h5 fw-bold mb-3" style="letter-spacing: -0.02em;">Description</h2>
+      <div class="text-body-secondary lh-lg">{{ project.description|linebreaks }}</div>
     </div>
   </article>
 
   {% if user.is_authenticated and user.is_teacher and project.teacher_id == user.id %}
-    <div class="mt-4 card app-card">
-      <div class="card-body">
-      <p class="small mb-2">
-        <span class="fw-semibold">Places pourvues :</span>
-        {{ accepted_count }} / {{ project.max_students }}
-        {% if slots_remaining > 0 %}
-          <span class="text-muted">
-            ({% if slots_remaining == 1 %}1 place restante{% else %}{{ slots_remaining }} places restantes{% endif %})
-          </span>
-        {% else %}
-          <span class="text-danger">(capacité maximale atteinte)</span>
-        {% endif %}
-      </p>
-      <a href="{% url 'applications:received' %}" class="btn btn-sm btn-outline-primary">Voir les candidatures reçues</a>
+    <div class="card app-card mb-4">
+      <div class="card-body p-4">
+        <p class="small mb-2">
+          <span class="fw-semibold">Places pourvues :</span>
+          {{ accepted_count }} / {{ project.max_students }}
+          {% if slots_remaining > 0 %}
+            <span class="text-muted">({% if slots_remaining == 1 %}1 place restante{% else %}{{ slots_remaining }} places restantes{% endif %})</span>
+          {% else %}
+            <span class="text-danger">(capacité maximale atteinte)</span>
+          {% endif %}
+        </p>
+        <a href="{% url 'applications:received' %}" class="btn btn-sm btn-outline-primary rounded-pill">Voir les candidatures reçues</a>
       </div>
     </div>
   {% endif %}
 
   {% if project.status == 'open' %}
-    <section class="mt-4 card app-card" aria-label="Candidature">
-      <div class="card-body">
-      <h2 class="h5">Candidature</h2>
-      {% if not user.is_authenticated %}
-        <p class="mb-0">
-          <a href="{% url 'login' %}?next={{ request.path|urlencode }}" class="btn btn-success">Connexion pour postuler</a>
-        </p>
-      {% elif user.is_student %}
-        {% if student_application %}
-          <p class="mb-2">Vous avez déjà postulé à ce projet.</p>
-          <a href="{% url 'applications:detail' student_application.pk %}" class="btn btn-outline-primary btn-sm">Voir ma candidature</a>
+    <section class="card app-card mb-4" aria-label="Candidature">
+      <div class="card-body p-4">
+        <h2 class="h5 fw-bold mb-3" style="letter-spacing: -0.02em;">Candidature</h2>
+        {% if not user.is_authenticated %}
+          <a href="{% url 'login' %}?next={{ request.path|urlencode }}" class="btn btn-success rounded-pill px-4">Connexion pour postuler</a>
+        {% elif user.is_student %}
+          {% if student_application %}
+            <p class="mb-3 text-body-secondary">Vous avez déjà postulé à ce projet.</p>
+            <a href="{% url 'applications:detail' student_application.pk %}" class="btn btn-outline-primary rounded-pill">Voir ma candidature</a>
+          {% else %}
+            <a href="{% url 'applications:create' project.pk %}" class="btn btn-success rounded-pill px-4">Postuler</a>
+          {% endif %}
+        {% elif user.is_teacher and project.teacher_id == user.id %}
+          <p class="text-muted small mb-0">Les étudiants peuvent postuler tant que le projet est ouvert.</p>
         {% else %}
-          <a href="{% url 'applications:create' project.pk %}" class="btn btn-success">Postuler</a>
+          <p class="text-muted small mb-0">Seuls les étudiants peuvent postuler aux projets.</p>
         {% endif %}
-      {% elif user.is_teacher and project.teacher_id == user.id %}
-        <p class="text-muted small mb-0">Les étudiants peuvent postuler tant que le projet est ouvert.</p>
-      {% else %}
-        <p class="text-muted small mb-0">Seuls les étudiants peuvent postuler aux projets.</p>
-      {% endif %}
       </div>
     </section>
   {% elif user.is_authenticated and user.is_student and student_application %}
-    <section class="mt-4 card app-card">
-      <div class="card-body">
-      <h2 class="h5">Candidature</h2>
-      <p class="mb-2">Ce projet n’accepte plus de nouvelles candidatures.</p>
-      <a href="{% url 'applications:detail' student_application.pk %}" class="btn btn-outline-primary btn-sm">Voir ma candidature</a>
+    <section class="card app-card mb-4">
+      <div class="card-body p-4">
+        <h2 class="h5 fw-bold mb-3" style="letter-spacing: -0.02em;">Candidature</h2>
+        <p class="mb-3 text-body-secondary">Ce projet n’accepte plus de nouvelles candidatures.</p>
+        <a href="{% url 'applications:detail' student_application.pk %}" class="btn btn-outline-primary rounded-pill">Voir ma candidature</a>
       </div>
     </section>
   {% endif %}
 
   {% if user.is_authenticated and user.is_teacher and project.teacher_id == user.id %}
-    <div class="mt-4 pt-3 d-flex flex-wrap gap-2">
-      <a href="{% url 'projects:update' project.pk %}" class="btn btn-primary">Modifier</a>
-      <a href="{% url 'projects:delete' project.pk %}" class="btn btn-outline-danger">Supprimer</a>
-      <a href="{% url 'projects:my_list' %}" class="btn btn-outline-secondary ms-md-auto">Mes projets</a>
+    <div class="d-flex flex-wrap gap-2 pt-2">
+      <a href="{% url 'projects:update' project.pk %}" class="btn btn-primary rounded-pill">Modifier</a>
+      <a href="{% url 'projects:delete' project.pk %}" class="btn btn-outline-danger rounded-pill">Supprimer</a>
+      <a href="{% url 'projects:my_list' %}" class="btn btn-outline-secondary rounded-pill ms-md-auto">Mes projets</a>
     </div>
   {% endif %}
 {% endblock %}

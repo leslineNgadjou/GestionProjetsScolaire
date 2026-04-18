@@ -4,26 +4,28 @@
 {% block content %}
   <header class="app-page-header">
     <h1 class="h2 app-page-title">Projets ouverts aux candidatures</h1>
-    <p class="text-muted mb-0">Recherchez par titre ou filtrez par domaine. Seuls les projets <strong>ouverts</strong> sont listés ici.</p>
+    <p class="text-muted mb-0">Recherchez par titre ou filtrez par domaine. Seuls les projets <strong>ouverts</strong> figurent dans ce catalogue.</p>
   </header>
 
-  <form method="get" class="app-filter-panel row g-3 align-items-end mb-4" action="{% url 'projects:list' %}">
-    <div class="col-12 col-md-5">
-      <label class="form-label" for="id_q">Recherche par titre</label>
-      <input type="search" name="q" id="id_q" class="form-control" value="{{ current_q }}" placeholder="Mots-clés…" autocomplete="off">
-    </div>
-    <div class="col-12 col-md-4">
-      <label class="form-label" for="id_domain">Domaine</label>
-      <select name="domain" id="id_domain" class="form-select">
-        <option value="">Tous les domaines</option>
-        {% for d in domain_choices %}
-          <option value="{{ d }}" {% if d == current_domain %}selected{% endif %}>{{ d }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="col-12 col-md-3 d-flex flex-wrap gap-2">
-      <button type="submit" class="btn btn-primary btn-lg flex-grow-1">Filtrer</button>
-      <a href="{% url 'projects:list' %}" class="btn btn-outline-secondary">Réinitialiser</a>
+  <form method="get" class="app-filter-panel" action="{% url 'projects:list' %}">
+    <div class="row g-3 align-items-end">
+      <div class="col-12 col-md-5">
+        <label class="form-label" for="id_q">Recherche</label>
+        <input type="search" name="q" id="id_q" class="form-control app-form-control" value="{{ current_q }}" placeholder="Titre, mots-clés…" autocomplete="off">
+      </div>
+      <div class="col-12 col-md-4">
+        <label class="form-label" for="id_domain">Domaine</label>
+        <select name="domain" id="id_domain" class="form-select app-form-control">
+          <option value="">Tous les domaines</option>
+          {% for d in domain_choices %}
+            <option value="{{ d }}" {% if d == current_domain %}selected{% endif %}>{{ d }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-12 col-md-3 d-flex flex-wrap gap-2">
+        <button type="submit" class="btn btn-primary flex-grow-1 rounded-pill">Appliquer</button>
+        <a href="{% url 'projects:list' %}" class="btn btn-outline-secondary rounded-pill">Réinitialiser</a>
+      </div>
     </div>
   </form>
 
@@ -33,25 +35,29 @@
         <div class="app-empty-icon" aria-hidden="true">∅</div>
         <p class="fw-semibold mb-1">Aucun projet à afficher</p>
         <p class="text-muted small mb-4">Aucun projet ouvert ne correspond à vos critères. Élargissez la recherche ou réinitialisez les filtres.</p>
-        <a href="{% url 'projects:list' %}" class="btn btn-outline-primary">Réinitialiser les filtres</a>
+        <a href="{% url 'projects:list' %}" class="btn btn-primary rounded-pill px-4">Réinitialiser les filtres</a>
       </div>
     </div>
   {% else %}
-    <div class="row g-3">
+    <div class="row g-4">
       {% for project in project_list %}
         <div class="col-12 col-md-6 col-xl-4">
-          <div class="card app-card h-100">
-            <div class="card-body d-flex flex-column">
+          <div class="card app-card app-project-card h-100">
+            <div class="card-body d-flex flex-column p-4">
               <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
-                <h2 class="h5 card-title mb-0">{{ project.title }}</h2>
+                <h2 class="h5 card-title mb-0" style="letter-spacing: -0.02em;">{{ project.title }}</h2>
                 {% include "projects/_status_badge.html" with status=project.status %}
               </div>
-              <p class="text-muted small mb-2">
-                {{ project.domain }} · {{ project.teacher.get_full_name|default:project.teacher.username }}
+              <p class="small text-body-secondary mb-2">
+                <span class="fw-semibold text-body">{{ project.domain }}</span>
+                <span class="text-muted"> · </span>
+                {{ project.teacher.get_full_name|default:project.teacher.username }}
               </p>
-              <p class="card-text small text-body-secondary flex-grow-1">{{ project.description|truncatewords:32 }}</p>
-              <p class="small mb-3"><span class="fw-semibold">Places :</span> {{ project.max_students }}</p>
-              <a href="{% url 'projects:detail' project.pk %}" class="btn btn-outline-primary btn-sm mt-auto align-self-start">Voir le détail</a>
+              <p class="card-text small text-body-secondary flex-grow-1 lh-base">{{ project.description|truncatewords:32 }}</p>
+              <div class="d-flex align-items-center justify-content-between mt-3 pt-2 border-top border-light-subtle">
+                <span class="small"><span class="fw-semibold">Places</span> · {{ project.max_students }}</span>
+                <a href="{% url 'projects:detail' project.pk %}" class="btn btn-sm btn-outline-primary rounded-pill">Détail</a>
+              </div>
             </div>
           </div>
         </div>
@@ -59,8 +65,8 @@
     </div>
 
     {% if is_paginated %}
-      <nav class="mt-4" aria-label="Pagination des projets">
-        <ul class="pagination justify-content-center flex-wrap mb-0">
+      <nav class="mt-5" aria-label="Pagination des projets">
+        <ul class="pagination app-pagination justify-content-center flex-wrap mb-0">
           {% if page_obj.has_previous %}
             <li class="page-item">
               <a class="page-link" href="?page=1&amp;q={{ current_q|urlencode }}&amp;domain={{ current_domain|urlencode }}">Première</a>

@@ -1,9 +1,9 @@
 {% if status == 'pending' %}
-  <span class="badge text-bg-warning text-dark app-badge-status">En attente</span>
+  <span class="badge app-badge-status app-badge-pending">En attente</span>
 {% elif status == 'accepted' %}
-  <span class="badge text-bg-success app-badge-status">Acceptée</span>
+  <span class="badge app-badge-status app-badge-accepted">Acceptée</span>
 {% elif status == 'rejected' %}
-  <span class="badge text-bg-danger app-badge-status">Refusée</span>
+  <span class="badge app-badge-status app-badge-rejected">Refusée</span>
 {% else %}
-  <span class="badge text-bg-light text-dark app-badge-status">{{ status }}</span>
+  <span class="badge app-badge-status app-badge-closed">{{ status }}</span>
 {% endif %}

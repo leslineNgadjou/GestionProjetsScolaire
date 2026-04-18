@@ -12,14 +12,14 @@
         <div class="app-empty-icon" aria-hidden="true">◇</div>
         <p class="fw-semibold mb-1">Aucune candidature</p>
         <p class="text-muted small mb-4">Parcourez le catalogue des projets ouverts et postulez en quelques clics.</p>
-        <a href="{% url 'projects:list' %}" class="btn btn-primary btn-lg">Voir les projets ouverts</a>
+        <a href="{% url 'projects:list' %}" class="btn btn-primary rounded-pill px-4">Voir les projets ouverts</a>
       </div>
     </div>
   {% else %}
     <div class="d-none d-md-block">
       <div class="table-responsive">
-        <table class="table table-hover align-middle app-data-table">
-          <thead class="table-light">
+        <table class="table table-hover align-middle app-data-table mb-0">
+          <thead>
             <tr>
               <th scope="col">Projet</th>
               <th scope="col">Domaine</th>
@@ -35,7 +35,7 @@
                 <td>{{ app.project.domain }}</td>
                 <td>{% include "applications/_application_status_badge.html" with status=app.status %}</td>
                 <td class="text-muted small">{{ app.applied_at|date:"d/m/Y H:i" }}</td>
-                <td><a href="{% url 'applications:detail' app.pk %}" class="btn btn-sm btn-outline-primary">Détail</a></td>
+                <td><a href="{% url 'applications:detail' app.pk %}" class="btn btn-sm btn-outline-primary rounded-pill">Détail</a></td>
               </tr>
             {% endfor %}
           </tbody>
@@ -45,23 +45,23 @@
 
     <div class="d-md-none">
       {% for app in applications %}
-        <div class="card app-card mb-3">
-          <div class="card-body">
+        <div class="card app-card app-project-card mb-3">
+          <div class="card-body p-4">
             <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
-              <h2 class="h6 mb-0">{{ app.project.title }}</h2>
+              <h2 class="h6 mb-0" style="letter-spacing: -0.02em;">{{ app.project.title }}</h2>
               {% include "applications/_application_status_badge.html" with status=app.status %}
             </div>
             <p class="small text-muted mb-2">{{ app.project.domain }}</p>
             <p class="small text-muted mb-3">Candidature le {{ app.applied_at|date:"d/m/Y H:i" }}</p>
-            <a href="{% url 'applications:detail' app.pk %}" class="btn btn-sm btn-outline-primary">Voir le détail</a>
+            <a href="{% url 'applications:detail' app.pk %}" class="btn btn-sm btn-outline-primary rounded-pill">Voir le détail</a>
           </div>
         </div>
       {% endfor %}
     </div>
 
     {% if is_paginated %}
-      <nav class="mt-3" aria-label="Pagination">
-        <ul class="pagination justify-content-center flex-wrap mb-0">
+      <nav class="mt-4" aria-label="Pagination">
+        <ul class="pagination app-pagination justify-content-center flex-wrap mb-0">
           {% if page_obj.has_previous %}
             <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Précédent</a></li>
           {% endif %}

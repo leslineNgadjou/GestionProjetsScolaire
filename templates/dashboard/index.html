@@ -2,62 +2,66 @@
 {% block title %}{{ dashboard_title }} — {{ block.super }}{% endblock %}
 {% block content %}
   <header class="app-page-header">
-    <h1 class="h2 app-page-title mb-2">{{ dashboard_title }}</h1>
+    <h1 class="h2 app-page-title mb-2" style="letter-spacing: -0.03em;">{{ dashboard_title }}</h1>
     <p class="text-muted mb-0">{{ dashboard_subtitle }}</p>
-    <p class="small text-secondary mt-2 mb-0">
-      Connecté en tant que <strong>{{ user.get_username }}</strong>
-      — <span class="badge text-bg-light border">{{ user.get_role_display }}</span>
-    </p>
+    <div class="d-flex flex-wrap align-items-center gap-2 mt-3">
+      <span class="small text-muted">Connecté en tant que <strong class="text-body">{{ user.get_username }}</strong></span>
+      <span class="badge app-badge-status app-badge-completed">{{ user.get_role_display }}</span>
+    </div>
   </header>
 
   {% if dashboard_role == 'student' %}
     <section class="mb-4" aria-label="Statistiques candidatures">
-      <h2 class="h5 mb-3 app-section-heading">Vos candidatures</h2>
+      <h2 class="h5 mb-4 app-section-heading">Vue d’ensemble</h2>
       <div class="row g-3">
         <div class="col-6 col-md-3">
-          <div class="card app-stat-card h-100">
-            <div class="card-body text-center">
-              <p class="small text-muted text-uppercase mb-1">Total</p>
-              <p class="display-6 fw-semibold mb-0">{{ stats.total }}</p>
+          <div class="card app-kpi-card h-100 p-3 border-0">
+            <div class="app-kpi-icon bg-primary bg-opacity-10 text-primary" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4zM3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.5 9.794 5.957 8.313a.389.389 0 0 0-.527.02L3.502 9.887a.389.389 0 0 0 .302.644h8.392a.389.389 0 0 0 .302-.644l-1.395-2.554z"/><path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/></svg>
             </div>
+            <p class="app-kpi-label mb-1">Total</p>
+            <p class="app-kpi-value mb-0">{{ stats.total }}</p>
           </div>
         </div>
         <div class="col-6 col-md-3">
-          <div class="card app-stat-card h-100 border-start border-warning border-3">
-            <div class="card-body text-center">
-              <p class="small text-muted text-uppercase mb-1">En attente</p>
-              <p class="display-6 fw-semibold text-warning-emphasis mb-0">{{ stats.pending }}</p>
+          <div class="card app-kpi-card h-100 p-3 border-0 border-start border-warning border-3">
+            <div class="app-kpi-icon bg-warning bg-opacity-10 text-warning" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M8 3a4.5 4.5 0 1 0 4.5 4.5.5.5 0 0 1 1 0 5.5 5.5 0 1 1-11 0 .5.5 0 0 1 1 0 4.5 4.5 0 0 0 4.5-4.5z"/></svg>
             </div>
+            <p class="app-kpi-label mb-1">En attente</p>
+            <p class="app-kpi-value mb-0 text-warning-emphasis">{{ stats.pending }}</p>
           </div>
         </div>
         <div class="col-6 col-md-3">
-          <div class="card app-stat-card h-100 border-start border-success border-3">
-            <div class="card-body text-center">
-              <p class="small text-muted text-uppercase mb-1">Acceptées</p>
-              <p class="display-6 fw-semibold text-success mb-0">{{ stats.accepted }}</p>
+          <div class="card app-kpi-card h-100 p-3 border-0 border-start border-success border-3">
+            <div class="app-kpi-icon bg-success bg-opacity-10 text-success" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/></svg>
             </div>
+            <p class="app-kpi-label mb-1">Acceptées</p>
+            <p class="app-kpi-value mb-0 text-success">{{ stats.accepted }}</p>
           </div>
         </div>
         <div class="col-6 col-md-3">
-          <div class="card app-stat-card h-100 border-start border-danger border-3">
-            <div class="card-body text-center">
-              <p class="small text-muted text-uppercase mb-1">Refusées</p>
-              <p class="display-6 fw-semibold text-danger mb-0">{{ stats.rejected }}</p>
+          <div class="card app-kpi-card h-100 p-3 border-0 border-start border-danger border-3">
+            <div class="app-kpi-icon bg-danger bg-opacity-10 text-danger" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/></svg>
             </div>
+            <p class="app-kpi-label mb-1">Refusées</p>
+            <p class="app-kpi-value mb-0 text-danger">{{ stats.rejected }}</p>
           </div>
         </div>
       </div>
     </section>
 
     <div class="d-flex flex-wrap gap-2 mb-4">
-      <a href="{% url 'applications:mine' %}" class="btn btn-primary btn-lg">Mes candidatures</a>
-      <a href="{% url 'projects:list' %}" class="btn btn-outline-primary btn-lg">Parcourir les projets</a>
+      <a href="{% url 'applications:mine' %}" class="btn btn-primary rounded-pill px-4">Mes candidatures</a>
+      <a href="{% url 'projects:list' %}" class="btn btn-outline-primary rounded-pill px-4">Parcourir les projets</a>
     </div>
 
     {% if recent_applications %}
       <section aria-label="Candidatures récentes">
         <h2 class="h5 mb-3 app-section-heading">Récentes</h2>
-        <div class="list-group shadow-sm">
+        <div class="list-group app-dash-list">
           {% for app in recent_applications %}
             <a href="{% url 'applications:detail' app.pk %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-start flex-wrap gap-2">
               <div>
@@ -73,72 +77,80 @@
 
   {% elif dashboard_role == 'teacher' %}
     <section class="mb-4" aria-label="Statistiques projets">
-      <h2 class="h5 mb-3 app-section-heading">Vos projets</h2>
+      <h2 class="h5 mb-4 app-section-heading">Vos projets</h2>
       <div class="row g-3">
         <div class="col-6 col-md-4 col-xl-2">
-          <div class="card app-stat-card h-100"><div class="card-body text-center py-3">
-            <p class="small text-muted mb-1">Total</p><p class="h3 mb-0">{{ project_stats.total }}</p>
-          </div></div>
+          <div class="card app-kpi-card h-100 p-3 border-0">
+            <p class="app-kpi-label mb-1">Total</p>
+            <p class="app-kpi-value mb-0" style="font-size: 1.5rem;">{{ project_stats.total }}</p>
+          </div>
         </div>
         <div class="col-6 col-md-4 col-xl-2">
-          <div class="card app-stat-card h-100 border-success border-3 border-start"><div class="card-body text-center py-3">
-            <p class="small text-muted mb-1">Ouverts</p><p class="h3 mb-0 text-success">{{ project_stats.open_count }}</p>
-          </div></div>
+          <div class="card app-kpi-card h-100 p-3 border-0 border-start border-success border-3">
+            <p class="app-kpi-label mb-1">Ouverts</p>
+            <p class="app-kpi-value mb-0 text-success" style="font-size: 1.5rem;">{{ project_stats.open_count }}</p>
+          </div>
         </div>
         <div class="col-6 col-md-4 col-xl-2">
-          <div class="card app-stat-card h-100"><div class="card-body text-center py-3">
-            <p class="small text-muted mb-1">Fermés</p><p class="h3 mb-0">{{ project_stats.closed_count }}</p>
-          </div></div>
+          <div class="card app-kpi-card h-100 p-3 border-0">
+            <p class="app-kpi-label mb-1">Fermés</p>
+            <p class="app-kpi-value mb-0" style="font-size: 1.5rem;">{{ project_stats.closed_count }}</p>
+          </div>
         </div>
         <div class="col-6 col-md-4 col-xl-2">
-          <div class="card app-stat-card h-100"><div class="card-body text-center py-3">
-            <p class="small text-muted mb-1">Terminés</p><p class="h3 mb-0">{{ project_stats.completed_count }}</p>
-          </div></div>
+          <div class="card app-kpi-card h-100 p-3 border-0">
+            <p class="app-kpi-label mb-1">Terminés</p>
+            <p class="app-kpi-value mb-0" style="font-size: 1.5rem;">{{ project_stats.completed_count }}</p>
+          </div>
         </div>
       </div>
     </section>
 
     <section class="mb-4" aria-label="Statistiques candidatures reçues">
-      <h2 class="h5 mb-3 app-section-heading">Candidatures reçues</h2>
+      <h2 class="h5 mb-4 app-section-heading">Candidatures reçues</h2>
       <div class="row g-3">
         <div class="col-6 col-md-3">
-          <div class="card app-stat-card h-100"><div class="card-body text-center">
-            <p class="small text-muted mb-1">Total</p><p class="display-6 fw-semibold mb-0">{{ application_stats.total }}</p>
-          </div></div>
+          <div class="card app-kpi-card h-100 p-3 border-0">
+            <p class="app-kpi-label mb-1">Total</p>
+            <p class="app-kpi-value mb-0">{{ application_stats.total }}</p>
+          </div>
         </div>
         <div class="col-6 col-md-3">
-          <div class="card app-stat-card h-100"><div class="card-body text-center">
-            <p class="small text-muted mb-1">En attente</p><p class="display-6 fw-semibold text-warning-emphasis mb-0">{{ application_stats.pending }}</p>
-          </div></div>
+          <div class="card app-kpi-card h-100 p-3 border-0">
+            <p class="app-kpi-label mb-1">En attente</p>
+            <p class="app-kpi-value mb-0 text-warning-emphasis">{{ application_stats.pending }}</p>
+          </div>
         </div>
         <div class="col-6 col-md-3">
-          <div class="card app-stat-card h-100"><div class="card-body text-center">
-            <p class="small text-muted mb-1">Acceptées</p><p class="display-6 fw-semibold text-success mb-0">{{ application_stats.accepted }}</p>
-          </div></div>
+          <div class="card app-kpi-card h-100 p-3 border-0">
+            <p class="app-kpi-label mb-1">Acceptées</p>
+            <p class="app-kpi-value mb-0 text-success">{{ application_stats.accepted }}</p>
+          </div>
         </div>
         <div class="col-6 col-md-3">
-          <div class="card app-stat-card h-100"><div class="card-body text-center">
-            <p class="small text-muted mb-1">Refusées</p><p class="display-6 fw-semibold text-danger mb-0">{{ application_stats.rejected }}</p>
-          </div></div>
+          <div class="card app-kpi-card h-100 p-3 border-0">
+            <p class="app-kpi-label mb-1">Refusées</p>
+            <p class="app-kpi-value mb-0 text-danger">{{ application_stats.rejected }}</p>
+          </div>
         </div>
       </div>
     </section>
 
     <div class="d-flex flex-wrap gap-2 mb-4">
-      <a href="{% url 'projects:my_list' %}" class="btn btn-primary btn-lg">Mes projets</a>
-      <a href="{% url 'projects:create' %}" class="btn btn-success btn-lg">Créer un projet</a>
-      <a href="{% url 'applications:received' %}" class="btn btn-outline-primary">Candidatures reçues</a>
-      <a href="{% url 'projects:list' %}" class="btn btn-outline-secondary">Catalogue public</a>
+      <a href="{% url 'projects:my_list' %}" class="btn btn-primary rounded-pill px-4">Mes projets</a>
+      <a href="{% url 'projects:create' %}" class="btn btn-success rounded-pill px-4">Créer un projet</a>
+      <a href="{% url 'applications:received' %}" class="btn btn-outline-primary rounded-pill">Candidatures reçues</a>
+      <a href="{% url 'projects:list' %}" class="btn btn-outline-secondary rounded-pill">Catalogue public</a>
     </div>
 
     <div class="row g-4">
       {% if recent_projects %}
         <div class="col-12 col-lg-6">
-          <h2 class="h6 text-muted text-uppercase mb-2">Derniers projets</h2>
-          <ul class="list-group list-group-flush shadow-sm rounded border">
+          <h2 class="h6 app-kpi-label mb-3">Derniers projets</h2>
+          <ul class="list-group app-dash-list list-group-flush">
             {% for p in recent_projects %}
               <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <a href="{{ p.get_absolute_url }}" class="text-decoration-none">{{ p.title }}</a>
+                <a href="{{ p.get_absolute_url }}" class="text-decoration-none fw-medium">{{ p.title }}</a>
                 {% include "projects/_status_badge.html" with status=p.status %}
               </li>
             {% endfor %}
@@ -147,8 +159,8 @@
       {% endif %}
       {% if recent_applications %}
         <div class="col-12 col-lg-6">
-          <h2 class="h6 text-muted text-uppercase mb-2">Dernières candidatures</h2>
-          <ul class="list-group list-group-flush shadow-sm rounded border">
+          <h2 class="h6 app-kpi-label mb-3">Dernières candidatures</h2>
+          <ul class="list-group app-dash-list list-group-flush">
             {% for app in recent_applications %}
               <li class="list-group-item d-flex justify-content-between align-items-start flex-wrap gap-2">
                 <div>
@@ -165,88 +177,98 @@
 
   {% elif dashboard_role == 'admin' %}
     <section class="mb-4" aria-label="Utilisateurs">
-      <h2 class="h5 mb-3 app-section-heading">Utilisateurs</h2>
+      <h2 class="h5 mb-4 app-section-heading">Utilisateurs</h2>
       <div class="row g-3">
         <div class="col-6 col-md-3">
-          <div class="card app-stat-card h-100"><div class="card-body text-center">
-            <p class="small text-muted mb-1">Total</p><p class="h2 mb-0">{{ user_stats.total }}</p>
-          </div></div>
+          <div class="card app-kpi-card h-100 p-3 border-0">
+            <p class="app-kpi-label mb-1">Total</p>
+            <p class="app-kpi-value mb-0" style="font-size: 1.65rem;">{{ user_stats.total }}</p>
+          </div>
         </div>
         <div class="col-6 col-md-3">
-          <div class="card app-stat-card h-100"><div class="card-body text-center">
-            <p class="small text-muted mb-1">Étudiants</p><p class="h2 mb-0 text-primary">{{ user_stats.students }}</p>
-          </div></div>
+          <div class="card app-kpi-card h-100 p-3 border-0">
+            <p class="app-kpi-label mb-1">Étudiants</p>
+            <p class="app-kpi-value mb-0 text-primary" style="font-size: 1.65rem;">{{ user_stats.students }}</p>
+          </div>
         </div>
         <div class="col-6 col-md-3">
-          <div class="card app-stat-card h-100"><div class="card-body text-center">
-            <p class="small text-muted mb-1">Enseignants</p><p class="h2 mb-0 text-primary">{{ user_stats.teachers }}</p>
-          </div></div>
+          <div class="card app-kpi-card h-100 p-3 border-0">
+            <p class="app-kpi-label mb-1">Enseignants</p>
+            <p class="app-kpi-value mb-0 text-primary" style="font-size: 1.65rem;">{{ user_stats.teachers }}</p>
+          </div>
         </div>
         <div class="col-6 col-md-3">
-          <div class="card app-stat-card h-100"><div class="card-body text-center">
-            <p class="small text-muted mb-1">Admins</p><p class="h2 mb-0 text-primary">{{ user_stats.admins }}</p>
-          </div></div>
+          <div class="card app-kpi-card h-100 p-3 border-0">
+            <p class="app-kpi-label mb-1">Admins</p>
+            <p class="app-kpi-value mb-0 text-primary" style="font-size: 1.65rem;">{{ user_stats.admins }}</p>
+          </div>
         </div>
       </div>
     </section>
 
     <section class="mb-4" aria-label="Projets">
-      <h2 class="h5 mb-3 app-section-heading">Projets</h2>
+      <h2 class="h5 mb-4 app-section-heading">Projets</h2>
       <div class="row g-3">
         <div class="col-6 col-md-4">
-          <div class="card app-stat-card h-100"><div class="card-body text-center">
-            <p class="small text-muted mb-1">Total</p><p class="h2 mb-0">{{ project_stats.total }}</p>
-          </div></div>
+          <div class="card app-kpi-card h-100 p-3 border-0">
+            <p class="app-kpi-label mb-1">Total</p>
+            <p class="app-kpi-value mb-0" style="font-size: 1.65rem;">{{ project_stats.total }}</p>
+          </div>
         </div>
         <div class="col-6 col-md-4">
-          <div class="card app-stat-card h-100"><div class="card-body text-center">
-            <p class="small text-muted mb-1">Ouverts</p><p class="h2 mb-0 text-success">{{ project_stats.open_count }}</p>
-          </div></div>
+          <div class="card app-kpi-card h-100 p-3 border-0">
+            <p class="app-kpi-label mb-1">Ouverts</p>
+            <p class="app-kpi-value mb-0 text-success" style="font-size: 1.65rem;">{{ project_stats.open_count }}</p>
+          </div>
         </div>
         <div class="col-6 col-md-4">
-          <div class="card app-stat-card h-100"><div class="card-body text-center">
-            <p class="small text-muted mb-1">Fermés / terminés</p>
-            <p class="h2 mb-0">{{ project_stats.closed_count|add:project_stats.completed_count }}</p>
-            <p class="small text-muted mb-0">({{ project_stats.closed_count }} fermés, {{ project_stats.completed_count }} terminés)</p>
-          </div></div>
+          <div class="card app-kpi-card h-100 p-3 border-0">
+            <p class="app-kpi-label mb-1">Fermés / terminés</p>
+            <p class="app-kpi-value mb-0" style="font-size: 1.65rem;">{{ project_stats.closed_count|add:project_stats.completed_count }}</p>
+            <p class="small text-muted mb-0 mt-1">({{ project_stats.closed_count }} fermés, {{ project_stats.completed_count }} terminés)</p>
+          </div>
         </div>
       </div>
     </section>
 
     <section class="mb-4" aria-label="Candidatures">
-      <h2 class="h5 mb-3 app-section-heading">Candidatures (toute la plateforme)</h2>
+      <h2 class="h5 mb-4 app-section-heading">Candidatures (plateforme)</h2>
       <div class="row g-3">
         <div class="col-6 col-md-3">
-          <div class="card app-stat-card h-100"><div class="card-body text-center">
-            <p class="small text-muted mb-1">Total</p><p class="display-6 fw-semibold mb-0">{{ application_stats.total }}</p>
-          </div></div>
+          <div class="card app-kpi-card h-100 p-3 border-0">
+            <p class="app-kpi-label mb-1">Total</p>
+            <p class="app-kpi-value mb-0">{{ application_stats.total }}</p>
+          </div>
         </div>
         <div class="col-6 col-md-3">
-          <div class="card app-stat-card h-100"><div class="card-body text-center">
-            <p class="small text-muted mb-1">En attente</p><p class="display-6 fw-semibold text-warning-emphasis mb-0">{{ application_stats.pending }}</p>
-          </div></div>
+          <div class="card app-kpi-card h-100 p-3 border-0">
+            <p class="app-kpi-label mb-1">En attente</p>
+            <p class="app-kpi-value mb-0 text-warning-emphasis">{{ application_stats.pending }}</p>
+          </div>
         </div>
         <div class="col-6 col-md-3">
-          <div class="card app-stat-card h-100"><div class="card-body text-center">
-            <p class="small text-muted mb-1">Acceptées</p><p class="display-6 fw-semibold text-success mb-0">{{ application_stats.accepted }}</p>
-          </div></div>
+          <div class="card app-kpi-card h-100 p-3 border-0">
+            <p class="app-kpi-label mb-1">Acceptées</p>
+            <p class="app-kpi-value mb-0 text-success">{{ application_stats.accepted }}</p>
+          </div>
         </div>
         <div class="col-6 col-md-3">
-          <div class="card app-stat-card h-100"><div class="card-body text-center">
-            <p class="small text-muted mb-1">Refusées</p><p class="display-6 fw-semibold text-danger mb-0">{{ application_stats.rejected }}</p>
-          </div></div>
+          <div class="card app-kpi-card h-100 p-3 border-0">
+            <p class="app-kpi-label mb-1">Refusées</p>
+            <p class="app-kpi-value mb-0 text-danger">{{ application_stats.rejected }}</p>
+          </div>
         </div>
       </div>
     </section>
 
     <section class="mb-4" aria-label="Graphiques synthétiques">
       <h2 class="h5 mb-2 app-section-heading">Synthèse visuelle</h2>
-      <p class="text-muted small mb-3">Répartition des comptes, des projets et des candidatures (données agrégées côté serveur).</p>
+      <p class="text-muted small mb-4">Répartition agrégée côté serveur.</p>
       <div class="row g-3">
         <div class="col-12 col-lg-4">
-          <div class="card app-stat-card h-100">
-            <div class="card-body">
-              <h3 class="h6 text-muted text-uppercase small mb-0">Utilisateurs par rôle</h3>
+          <div class="card app-stat-card h-100 border-0">
+            <div class="card-body p-4">
+              <h3 class="h6 app-kpi-label mb-0">Utilisateurs par rôle</h3>
               <div class="admin-chart-wrap mt-3">
                 <canvas id="adminChartUsers" aria-label="Graphique utilisateurs par rôle"></canvas>
               </div>
@@ -254,9 +276,9 @@
           </div>
         </div>
         <div class="col-12 col-lg-4">
-          <div class="card app-stat-card h-100">
-            <div class="card-body">
-              <h3 class="h6 text-muted text-uppercase small mb-0">Candidatures par statut</h3>
+          <div class="card app-stat-card h-100 border-0">
+            <div class="card-body p-4">
+              <h3 class="h6 app-kpi-label mb-0">Candidatures par statut</h3>
               <div class="admin-chart-wrap mt-3">
                 <canvas id="adminChartApplications" aria-label="Graphique candidatures par statut"></canvas>
               </div>
@@ -264,9 +286,9 @@
           </div>
         </div>
         <div class="col-12 col-lg-4">
-          <div class="card app-stat-card h-100">
-            <div class="card-body">
-              <h3 class="h6 text-muted text-uppercase small mb-0">Projets par statut</h3>
+          <div class="card app-stat-card h-100 border-0">
+            <div class="card-body p-4">
+              <h3 class="h6 app-kpi-label mb-0">Projets par statut</h3>
               <div class="admin-chart-wrap mt-3">
                 <canvas id="adminChartProjects" aria-label="Graphique projets par statut"></canvas>
               </div>
@@ -281,17 +303,17 @@
 
     <div class="d-flex flex-wrap gap-2">
       {% if show_django_admin_link %}
-        <a href="{% url 'admin:index' %}" class="btn btn-dark btn-lg">Administration Django</a>
+        <a href="{% url 'admin:index' %}" class="btn btn-dark rounded-pill px-4">Administration Django</a>
       {% endif %}
-      <a href="{% url 'projects:list' %}" class="btn btn-outline-primary btn-lg">Projets (public)</a>
+      <a href="{% url 'projects:list' %}" class="btn btn-outline-primary rounded-pill px-4">Projets (public)</a>
     </div>
     {% if not show_django_admin_link %}
-      <p class="small text-muted mt-2 mb-0">Le lien vers l’admin Django apparaît si votre compte a le statut <em>staff</em>.</p>
+      <p class="small text-muted mt-3 mb-0">Le lien vers l’admin Django apparaît si votre compte a le statut <em>staff</em>.</p>
     {% endif %}
 
   {% else %}
     <p class="text-muted">{{ dashboard_subtitle }}</p>
-    <a href="{% url 'projects:list' %}" class="btn btn-primary btn-lg">Voir les projets</a>
+    <a href="{% url 'projects:list' %}" class="btn btn-primary rounded-pill px-4">Voir les projets</a>
   {% endif %}
 {% endblock %}
 
@@ -300,7 +322,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js" crossorigin="anonymous"></script>
     <script>
       (function () {
-        var palette = ['#1e5a8e', '#198754', '#fd7e14', '#6c757d', '#0dcaf0', '#842029'];
+        var palette = ['#6366f1', '#34d399', '#fbbf24', '#94a3b8', '#22d3ee', '#f87171'];
+
+        function chartBorderColor() {
+          return document.documentElement.getAttribute('data-bs-theme') === 'dark'
+            ? '#1e293b'
+            : '#ffffff';
+        }
 
         function readPayload(scriptId) {
           var el = document.getElementById(scriptId);
@@ -327,7 +355,7 @@
                 data: payload.values,
                 backgroundColor: colors,
                 borderWidth: 2,
-                borderColor: '#ffffff',
+                borderColor: chartBorderColor(),
               }],
             },
             options: {

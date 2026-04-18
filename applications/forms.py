@@ -25,7 +25,7 @@ class ApplicationForm(forms.ModelForm):
         fields = ['project', 'motivation']
         widgets = {
             'motivation': forms.Textarea(
-                attrs={'rows': 5, 'class': 'form-control'},
+                attrs={'rows': 5, 'class': 'form-control app-form-control'},
             ),
         }
 
@@ -48,7 +48,7 @@ class ApplicationForm(forms.ModelForm):
             project_field.queryset = qs.distinct().order_by('title')
             project_field.empty_label = _('Sélectionner un projet')
             project_field.label = _('projet')
-            project_field.widget.attrs.setdefault('class', 'form-select')
+            project_field.widget.attrs.setdefault('class', 'form-select app-form-control')
 
     def clean(self):
         cleaned_data = super().clean()

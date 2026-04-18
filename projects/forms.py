@@ -24,13 +24,19 @@ class ProjectForm(forms.ModelForm):
         model = Project
         fields = ['title', 'description', 'domain', 'max_students', 'status']
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(
-                attrs={'rows': 6, 'class': 'form-control'},
+            'title': forms.TextInput(
+                attrs={'class': 'form-control app-form-control'},
             ),
-            'domain': forms.TextInput(attrs={'class': 'form-control'}),
-            'max_students': forms.NumberInput(attrs={'class': 'form-control'}),
-            'status': forms.Select(attrs={'class': 'form-select'}),
+            'description': forms.Textarea(
+                attrs={'rows': 6, 'class': 'form-control app-form-control'},
+            ),
+            'domain': forms.TextInput(
+                attrs={'class': 'form-control app-form-control'},
+            ),
+            'max_students': forms.NumberInput(
+                attrs={'class': 'form-control app-form-control'},
+            ),
+            'status': forms.Select(attrs={'class': 'form-select app-form-control'}),
         }
 
     def clean_title(self):

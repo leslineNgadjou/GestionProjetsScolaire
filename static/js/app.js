@@ -1,7 +1,50 @@
 /**
- * Comportements globaux (accessibilité, formulaires).
+ * Thème clair / sombre + bascules mot de passe.
  */
 (function () {
+  var THEME_KEY = 'app-theme';
+
+  function getTheme() {
+    return document.documentElement.getAttribute('data-bs-theme') || 'light';
+  }
+
+  function setTheme(theme) {
+    document.documentElement.setAttribute('data-bs-theme', theme);
+    try {
+      localStorage.setItem(THEME_KEY, theme);
+    } catch (e) {}
+    syncThemeToggleUi();
+  }
+
+  function syncThemeToggleUi() {
+    var t = getTheme();
+    var lightIc = document.querySelector('.app-theme-icon-light');
+    var darkIc = document.querySelector('.app-theme-icon-dark');
+    if (lightIc && darkIc) {
+      lightIc.classList.toggle('d-none', t === 'dark');
+      darkIc.classList.toggle('d-none', t !== 'dark');
+    }
+    var btn = document.getElementById('app-theme-toggle');
+    if (btn) {
+      btn.setAttribute(
+        'aria-label',
+        t === 'dark' ? 'Passer au thème clair' : 'Passer au thème sombre',
+      );
+    }
+  }
+
+  function initThemeToggle() {
+    var btn = document.getElementById('app-theme-toggle');
+    if (!btn || btn.dataset.appThemeWired) {
+      return;
+    }
+    btn.dataset.appThemeWired = '1';
+    syncThemeToggleUi();
+    btn.addEventListener('click', function () {
+      setTheme(getTheme() === 'dark' ? 'light' : 'dark');
+    });
+  }
+
   function initPasswordToggles() {
     document.querySelectorAll('[data-app-password-toggle]').forEach(function (btn) {
       var targetId = btn.getAttribute('data-app-password-toggle');
@@ -30,9 +73,14 @@
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initPasswordToggles);
-  } else {
+  function init() {
+    initThemeToggle();
     initPasswordToggles();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
   }
 })();

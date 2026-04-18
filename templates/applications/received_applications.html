@@ -3,7 +3,7 @@
 {% block content %}
   <header class="app-page-header">
     <h1 class="h2 app-page-title">Candidatures reçues</h1>
-    <p class="text-muted small mb-0">Dossiers déposés sur <strong>vos</strong> projets. Les actions Accepter / Refuser concernent uniquement les candidatures <strong>en attente</strong>.</p>
+    <p class="text-muted small mb-0">Dossiers sur <strong>vos</strong> projets. Accepter / Refuser : candidatures <strong>en attente</strong> uniquement.</p>
   </header>
 
   {% if not applications %}
@@ -12,13 +12,13 @@
         <div class="app-empty-icon" aria-hidden="true">◇</div>
         <p class="fw-semibold mb-1">Aucune candidature reçue</p>
         <p class="text-muted small mb-4">Les dossiers déposés sur vos projets apparaîtront ici.</p>
-        <a href="{% url 'projects:my_list' %}" class="btn btn-outline-primary btn-lg">Mes projets</a>
+        <a href="{% url 'projects:my_list' %}" class="btn btn-outline-primary rounded-pill px-4">Mes projets</a>
       </div>
     </div>
   {% else %}
     <div class="table-responsive d-none d-lg-block">
       <table class="table table-hover align-middle app-data-table">
-        <thead class="table-light">
+        <thead>
           <tr>
             <th scope="col">Projet</th>
             <th scope="col">Étudiant</th>
@@ -35,17 +35,19 @@
               <td>{% include "applications/_application_status_badge.html" with status=app.status %}</td>
               <td class="text-muted small">{{ app.applied_at|date:"d/m/Y H:i" }}</td>
               <td>
-                <a href="{% url 'applications:detail' app.pk %}" class="btn btn-sm btn-outline-primary">Détail</a>
-                {% if app.status == 'pending' %}
-                  <form class="d-inline" method="post" action="{% url 'applications:accept' app.pk %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-success">Accepter</button>
-                  </form>
-                  <form class="d-inline" method="post" action="{% url 'applications:reject' app.pk %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-outline-danger">Refuser</button>
-                  </form>
-                {% endif %}
+                <div class="d-flex flex-wrap gap-1">
+                  <a href="{% url 'applications:detail' app.pk %}" class="btn btn-sm btn-outline-primary rounded-pill">Détail</a>
+                  {% if app.status == 'pending' %}
+                    <form class="d-inline" method="post" action="{% url 'applications:accept' app.pk %}">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm btn-success rounded-pill">Accepter</button>
+                    </form>
+                    <form class="d-inline" method="post" action="{% url 'applications:reject' app.pk %}">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">Refuser</button>
+                    </form>
+                  {% endif %}
+                </div>
               </td>
             </tr>
           {% endfor %}
@@ -56,25 +58,25 @@
     <div class="d-lg-none">
       {% for app in applications %}
         <div class="card app-card mb-3">
-          <div class="card-body">
+          <div class="card-body p-4">
             <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
               <div>
-                <h2 class="h6 mb-1">{{ app.project.title }}</h2>
+                <h2 class="h6 mb-1" style="letter-spacing: -0.02em;">{{ app.project.title }}</h2>
                 <p class="small text-muted mb-0">{{ app.student.get_full_name|default:app.student.username }}</p>
               </div>
               {% include "applications/_application_status_badge.html" with status=app.status %}
             </div>
             <p class="small text-muted mb-3">{{ app.applied_at|date:"d/m/Y H:i" }}</p>
             <div class="d-flex flex-wrap gap-2">
-              <a href="{% url 'applications:detail' app.pk %}" class="btn btn-sm btn-outline-primary">Détail</a>
+              <a href="{% url 'applications:detail' app.pk %}" class="btn btn-sm btn-outline-primary rounded-pill">Détail</a>
               {% if app.status == 'pending' %}
                 <form class="d-inline" method="post" action="{% url 'applications:accept' app.pk %}">
                   {% csrf_token %}
-                  <button type="submit" class="btn btn-sm btn-success">Accepter</button>
+                  <button type="submit" class="btn btn-sm btn-success rounded-pill">Accepter</button>
                 </form>
                 <form class="d-inline" method="post" action="{% url 'applications:reject' app.pk %}">
                   {% csrf_token %}
-                  <button type="submit" class="btn btn-sm btn-outline-danger">Refuser</button>
+                  <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">Refuser</button>
                 </form>
               {% endif %}
             </div>
@@ -84,8 +86,8 @@
     </div>
 
     {% if is_paginated %}
-      <nav class="mt-3" aria-label="Pagination">
-        <ul class="pagination justify-content-center flex-wrap mb-0">
+      <nav class="mt-4" aria-label="Pagination">
+        <ul class="pagination app-pagination justify-content-center flex-wrap mb-0">
           {% if page_obj.has_previous %}
             <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Précédent</a></li>
           {% endif %}
