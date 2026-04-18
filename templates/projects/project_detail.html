@@ -81,10 +81,10 @@
   {% endif %}
 
   {% if user.is_authenticated and user.is_teacher and project.teacher_id == user.id %}
-    <div class="d-flex flex-wrap gap-2 pt-2">
-      <a href="{% url 'projects:update' project.pk %}" class="btn btn-primary rounded-pill">Modifier</a>
-      <a href="{% url 'projects:delete' project.pk %}" class="btn btn-outline-danger rounded-pill">Supprimer</a>
-      <a href="{% url 'projects:my_list' %}" class="btn btn-outline-secondary rounded-pill ms-md-auto">Mes projets</a>
+    <div class="app-action-bar app-action-bar--embedded pt-2">
+      <a href="{% url 'projects:update' project.pk %}" class="btn btn-primary rounded-pill px-4">Modifier</a>
+      <a href="{% url 'projects:delete' project.pk %}" class="btn btn-outline-danger rounded-pill px-3">Supprimer</a>
+      <a href="{% url 'projects:my_list' %}" class="btn btn-outline-secondary rounded-pill px-3 app-push-end">Mes projets</a>
     </div>
   {% endif %}
 {% endblock %}

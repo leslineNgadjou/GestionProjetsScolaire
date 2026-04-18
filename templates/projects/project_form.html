@@ -29,13 +29,13 @@
                 {% endif %}
               </div>
             {% endfor %}
-            <div class="d-flex flex-wrap gap-2 pt-2">
-              <button type="submit" class="btn btn-primary rounded-pill px-4">Enregistrer</button>
+            <div class="app-action-bar app-action-bar--embedded">
               {% if object.pk %}
-                <a href="{{ object.get_absolute_url }}" class="btn btn-outline-secondary rounded-pill">Annuler</a>
+                <a href="{{ object.get_absolute_url }}" class="btn btn-outline-secondary rounded-pill px-3">Annuler</a>
               {% else %}
-                <a href="{% url 'projects:my_list' %}" class="btn btn-outline-secondary rounded-pill">Annuler</a>
+                <a href="{% url 'projects:my_list' %}" class="btn btn-outline-secondary rounded-pill px-3">Annuler</a>
               {% endif %}
+              <button type="submit" class="btn btn-primary rounded-pill px-4 app-push-end">Enregistrer</button>
             </div>
           </form>
         </div>

@@ -12,12 +12,12 @@
       Si vous pensez qu’il s’agit d’une erreur, contactez un administrateur.
     </p>
     <div class="d-flex flex-column flex-sm-row flex-wrap justify-content-center gap-2">
-      <a href="{% url 'core:home' %}" class="btn btn-primary btn-lg">Accueil</a>
-      <a href="{% url 'projects:list' %}" class="btn btn-outline-primary btn-lg">Projets ouverts</a>
+      <a href="{% url 'core:home' %}" class="btn btn-primary btn-lg rounded-pill px-4">Accueil</a>
+      <a href="{% url 'projects:list' %}" class="btn btn-outline-primary btn-lg rounded-pill px-4">Projets ouverts</a>
       {% if user.is_authenticated %}
-        <a href="{% url 'dashboard:index' %}" class="btn btn-outline-secondary btn-lg">Tableau de bord</a>
+        <a href="{% url 'dashboard:index' %}" class="btn btn-outline-secondary btn-lg rounded-pill px-4">Tableau de bord</a>
       {% else %}
-        <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-lg">Connexion</a>
+        <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-lg rounded-pill px-4">Connexion</a>
       {% endif %}
     </div>
   </div>

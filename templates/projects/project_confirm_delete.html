@@ -17,9 +17,9 @@
           </p>
           <form method="post">
             {% csrf_token %}
-            <div class="d-flex flex-wrap gap-2">
-              <button type="submit" class="btn btn-danger rounded-pill px-4">Supprimer définitivement</button>
-              <a href="{{ project.get_absolute_url }}" class="btn btn-outline-secondary rounded-pill">Annuler</a>
+            <div class="app-action-bar app-action-bar--embedded">
+              <a href="{{ project.get_absolute_url }}" class="btn btn-outline-secondary rounded-pill px-3">Annuler</a>
+              <button type="submit" class="btn btn-danger rounded-pill px-4 app-push-end">Supprimer définitivement</button>
             </div>
           </form>
         </div>

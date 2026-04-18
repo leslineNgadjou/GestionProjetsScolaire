@@ -35,16 +35,16 @@
               <td>{% include "applications/_application_status_badge.html" with status=app.status %}</td>
               <td class="text-muted small">{{ app.applied_at|date:"d/m/Y H:i" }}</td>
               <td>
-                <div class="d-flex flex-wrap gap-1">
+                <div class="app-action-bar app-action-bar--embedded app-action-bar--tight">
                   <a href="{% url 'applications:detail' app.pk %}" class="btn btn-sm btn-outline-primary rounded-pill">Détail</a>
                   {% if app.status == 'pending' %}
-                    <form class="d-inline" method="post" action="{% url 'applications:accept' app.pk %}">
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-sm btn-success rounded-pill">Accepter</button>
-                    </form>
                     <form class="d-inline" method="post" action="{% url 'applications:reject' app.pk %}">
                       {% csrf_token %}
                       <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">Refuser</button>
+                    </form>
+                    <form class="d-inline" method="post" action="{% url 'applications:accept' app.pk %}">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm btn-success rounded-pill">Accepter</button>
                     </form>
                   {% endif %}
                 </div>
@@ -67,16 +67,16 @@
               {% include "applications/_application_status_badge.html" with status=app.status %}
             </div>
             <p class="small text-muted mb-3">{{ app.applied_at|date:"d/m/Y H:i" }}</p>
-            <div class="d-flex flex-wrap gap-2">
+            <div class="app-action-bar app-action-bar--embedded app-action-bar--tight">
               <a href="{% url 'applications:detail' app.pk %}" class="btn btn-sm btn-outline-primary rounded-pill">Détail</a>
               {% if app.status == 'pending' %}
-                <form class="d-inline" method="post" action="{% url 'applications:accept' app.pk %}">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-sm btn-success rounded-pill">Accepter</button>
-                </form>
                 <form class="d-inline" method="post" action="{% url 'applications:reject' app.pk %}">
                   {% csrf_token %}
                   <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">Refuser</button>
+                </form>
+                <form class="d-inline" method="post" action="{% url 'applications:accept' app.pk %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-success rounded-pill">Accepter</button>
                 </form>
               {% endif %}
             </div>

@@ -538,6 +538,50 @@
   border-radius: var(--app-radius-pill) !important;
 }
 
+/* --- Hiérarchie des actions (boutons / liens) ---
+   - Primaire : btn-primary (soumettre, enregistrer).
+   - Succès métier : btn-success (accepter, postuler).
+   - Secondaire / annuler : btn-outline-secondary.
+   - Navigation douce : btn-outline-primary.
+   - Destructeur : btn-outline-danger (liste) ; btn-danger (confirmation explicite).
+   - Barre d’actions : annuler / secondaire d’abord ; action principale avec .app-push-end (à droite ≥ md).
+*/
+.app-action-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid var(--app-border);
+}
+
+.app-action-bar--embedded {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.app-action-bar--tight {
+  gap: 0.35rem;
+}
+
+@media (min-width: 768px) {
+  .app-action-bar .app-push-end {
+    margin-left: auto;
+  }
+}
+
+.app-btn-tertiary.btn-link {
+  font-weight: 500;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.app-btn-tertiary.btn-link:hover {
+  text-decoration: underline;
+}
+
 /* --- Alertes --- */
 .app-alerts .alert {
   border: 1px solid var(--app-border);
