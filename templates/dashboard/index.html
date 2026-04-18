@@ -1,7 +1,256 @@
 {% extends "base.html" %}
-{% block title %}Tableau de bord — {{ block.super }}{% endblock %}
+{% block title %}{{ dashboard_title }} — {{ block.super }}{% endblock %}
 {% block content %}
-  <h1 class="h3 mb-3">Tableau de bord</h1>
-  <p>Connecté en tant que <strong>{{ user.get_username }}</strong> ({{ user.get_role_display }}).</p>
-  <p class="text-muted small">La logique par rôle (étudiant / enseignant / admin) viendra ici.</p>
+  <header class="app-page-header">
+    <h1 class="h2 app-page-title mb-2">{{ dashboard_title }}</h1>
+    <p class="text-muted mb-0">{{ dashboard_subtitle }}</p>
+    <p class="small text-secondary mt-2 mb-0">
+      Connecté en tant que <strong>{{ user.get_username }}</strong>
+      — <span class="badge text-bg-light border">{{ user.get_role_display }}</span>
+    </p>
+  </header>
+
+  {% if dashboard_role == 'student' %}
+    <section class="mb-4" aria-label="Statistiques candidatures">
+      <h2 class="h5 mb-3">Vos candidatures</h2>
+      <div class="row g-3">
+        <div class="col-6 col-md-3">
+          <div class="card app-stat-card h-100">
+            <div class="card-body text-center">
+              <p class="small text-muted text-uppercase mb-1">Total</p>
+              <p class="display-6 fw-semibold mb-0">{{ stats.total }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card app-stat-card h-100 border-start border-warning border-3">
+            <div class="card-body text-center">
+              <p class="small text-muted text-uppercase mb-1">En attente</p>
+              <p class="display-6 fw-semibold text-warning-emphasis mb-0">{{ stats.pending }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card app-stat-card h-100 border-start border-success border-3">
+            <div class="card-body text-center">
+              <p class="small text-muted text-uppercase mb-1">Acceptées</p>
+              <p class="display-6 fw-semibold text-success mb-0">{{ stats.accepted }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card app-stat-card h-100 border-start border-danger border-3">
+            <div class="card-body text-center">
+              <p class="small text-muted text-uppercase mb-1">Refusées</p>
+              <p class="display-6 fw-semibold text-danger mb-0">{{ stats.rejected }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="d-flex flex-wrap gap-2 mb-4">
+      <a href="{% url 'applications:mine' %}" class="btn btn-primary">Mes candidatures</a>
+      <a href="{% url 'projects:list' %}" class="btn btn-outline-primary">Parcourir les projets</a>
+    </div>
+
+    {% if recent_applications %}
+      <section aria-label="Candidatures récentes">
+        <h2 class="h5 mb-3">Récentes</h2>
+        <div class="list-group shadow-sm">
+          {% for app in recent_applications %}
+            <a href="{% url 'applications:detail' app.pk %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-start flex-wrap gap-2">
+              <div>
+                <span class="fw-medium">{{ app.project.title }}</span>
+                <span class="text-muted small d-block">{{ app.applied_at|date:"d/m/Y H:i" }}</span>
+              </div>
+              {% include "applications/_application_status_badge.html" with status=app.status %}
+            </a>
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+  {% elif dashboard_role == 'teacher' %}
+    <section class="mb-4" aria-label="Statistiques projets">
+      <h2 class="h5 mb-3">Vos projets</h2>
+      <div class="row g-3">
+        <div class="col-6 col-md-4 col-xl-2">
+          <div class="card app-stat-card h-100"><div class="card-body text-center py-3">
+            <p class="small text-muted mb-1">Total</p><p class="h3 mb-0">{{ project_stats.total }}</p>
+          </div></div>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+          <div class="card app-stat-card h-100 border-success border-3 border-start"><div class="card-body text-center py-3">
+            <p class="small text-muted mb-1">Ouverts</p><p class="h3 mb-0 text-success">{{ project_stats.open_count }}</p>
+          </div></div>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+          <div class="card app-stat-card h-100"><div class="card-body text-center py-3">
+            <p class="small text-muted mb-1">Fermés</p><p class="h3 mb-0">{{ project_stats.closed_count }}</p>
+          </div></div>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+          <div class="card app-stat-card h-100"><div class="card-body text-center py-3">
+            <p class="small text-muted mb-1">Terminés</p><p class="h3 mb-0">{{ project_stats.completed_count }}</p>
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-4" aria-label="Statistiques candidatures reçues">
+      <h2 class="h5 mb-3">Candidatures reçues</h2>
+      <div class="row g-3">
+        <div class="col-6 col-md-3">
+          <div class="card app-stat-card h-100"><div class="card-body text-center">
+            <p class="small text-muted mb-1">Total</p><p class="display-6 fw-semibold mb-0">{{ application_stats.total }}</p>
+          </div></div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card app-stat-card h-100"><div class="card-body text-center">
+            <p class="small text-muted mb-1">En attente</p><p class="display-6 fw-semibold text-warning-emphasis mb-0">{{ application_stats.pending }}</p>
+          </div></div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card app-stat-card h-100"><div class="card-body text-center">
+            <p class="small text-muted mb-1">Acceptées</p><p class="display-6 fw-semibold text-success mb-0">{{ application_stats.accepted }}</p>
+          </div></div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card app-stat-card h-100"><div class="card-body text-center">
+            <p class="small text-muted mb-1">Refusées</p><p class="display-6 fw-semibold text-danger mb-0">{{ application_stats.rejected }}</p>
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="d-flex flex-wrap gap-2 mb-4">
+      <a href="{% url 'projects:my_list' %}" class="btn btn-primary">Mes projets</a>
+      <a href="{% url 'projects:create' %}" class="btn btn-success">Créer un projet</a>
+      <a href="{% url 'applications:received' %}" class="btn btn-outline-primary">Candidatures reçues</a>
+      <a href="{% url 'projects:list' %}" class="btn btn-outline-secondary">Catalogue public</a>
+    </div>
+
+    <div class="row g-4">
+      {% if recent_projects %}
+        <div class="col-12 col-lg-6">
+          <h2 class="h6 text-muted text-uppercase mb-2">Derniers projets</h2>
+          <ul class="list-group list-group-flush shadow-sm rounded border">
+            {% for p in recent_projects %}
+              <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <a href="{{ p.get_absolute_url }}" class="text-decoration-none">{{ p.title }}</a>
+                {% include "projects/_status_badge.html" with status=p.status %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+      {% if recent_applications %}
+        <div class="col-12 col-lg-6">
+          <h2 class="h6 text-muted text-uppercase mb-2">Dernières candidatures</h2>
+          <ul class="list-group list-group-flush shadow-sm rounded border">
+            {% for app in recent_applications %}
+              <li class="list-group-item d-flex justify-content-between align-items-start flex-wrap gap-2">
+                <div>
+                  <a href="{% url 'applications:detail' app.pk %}" class="fw-medium text-decoration-none">{{ app.student.get_full_name|default:app.student.username }}</a>
+                  <span class="small text-muted d-block">{{ app.project.title }}</span>
+                </div>
+                {% include "applications/_application_status_badge.html" with status=app.status %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+
+  {% elif dashboard_role == 'admin' %}
+    <section class="mb-4" aria-label="Utilisateurs">
+      <h2 class="h5 mb-3">Utilisateurs</h2>
+      <div class="row g-3">
+        <div class="col-6 col-md-3">
+          <div class="card app-stat-card h-100"><div class="card-body text-center">
+            <p class="small text-muted mb-1">Total</p><p class="h2 mb-0">{{ user_stats.total }}</p>
+          </div></div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card app-stat-card h-100"><div class="card-body text-center">
+            <p class="small text-muted mb-1">Étudiants</p><p class="h2 mb-0 text-primary">{{ user_stats.students }}</p>
+          </div></div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card app-stat-card h-100"><div class="card-body text-center">
+            <p class="small text-muted mb-1">Enseignants</p><p class="h2 mb-0 text-primary">{{ user_stats.teachers }}</p>
+          </div></div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card app-stat-card h-100"><div class="card-body text-center">
+            <p class="small text-muted mb-1">Admins</p><p class="h2 mb-0 text-primary">{{ user_stats.admins }}</p>
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-4" aria-label="Projets">
+      <h2 class="h5 mb-3">Projets</h2>
+      <div class="row g-3">
+        <div class="col-6 col-md-4">
+          <div class="card app-stat-card h-100"><div class="card-body text-center">
+            <p class="small text-muted mb-1">Total</p><p class="h2 mb-0">{{ project_stats.total }}</p>
+          </div></div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card app-stat-card h-100"><div class="card-body text-center">
+            <p class="small text-muted mb-1">Ouverts</p><p class="h2 mb-0 text-success">{{ project_stats.open_count }}</p>
+          </div></div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="card app-stat-card h-100"><div class="card-body text-center">
+            <p class="small text-muted mb-1">Fermés / terminés</p>
+            <p class="h2 mb-0">{{ project_stats.closed_count|add:project_stats.completed_count }}</p>
+            <p class="small text-muted mb-0">({{ project_stats.closed_count }} fermés, {{ project_stats.completed_count }} terminés)</p>
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-4" aria-label="Candidatures">
+      <h2 class="h5 mb-3">Candidatures (toute la plateforme)</h2>
+      <div class="row g-3">
+        <div class="col-6 col-md-3">
+          <div class="card app-stat-card h-100"><div class="card-body text-center">
+            <p class="small text-muted mb-1">Total</p><p class="display-6 fw-semibold mb-0">{{ application_stats.total }}</p>
+          </div></div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card app-stat-card h-100"><div class="card-body text-center">
+            <p class="small text-muted mb-1">En attente</p><p class="display-6 fw-semibold text-warning-emphasis mb-0">{{ application_stats.pending }}</p>
+          </div></div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card app-stat-card h-100"><div class="card-body text-center">
+            <p class="small text-muted mb-1">Acceptées</p><p class="display-6 fw-semibold text-success mb-0">{{ application_stats.accepted }}</p>
+          </div></div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card app-stat-card h-100"><div class="card-body text-center">
+            <p class="small text-muted mb-1">Refusées</p><p class="display-6 fw-semibold text-danger mb-0">{{ application_stats.rejected }}</p>
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="d-flex flex-wrap gap-2">
+      {% if show_django_admin_link %}
+        <a href="{% url 'admin:index' %}" class="btn btn-dark">Administration Django</a>
+      {% endif %}
+      <a href="{% url 'projects:list' %}" class="btn btn-outline-primary">Projets (public)</a>
+    </div>
+    {% if not show_django_admin_link %}
+      <p class="small text-muted mt-2 mb-0">Le lien vers l’admin Django apparaît si votre compte a le statut <em>staff</em>.</p>
+    {% endif %}
+
+  {% else %}
+    <p class="text-muted">{{ dashboard_subtitle }}</p>
+    <a href="{% url 'projects:list' %}" class="btn btn-primary">Voir les projets</a>
+  {% endif %}
 {% endblock %}
