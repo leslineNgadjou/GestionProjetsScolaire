@@ -52,6 +52,20 @@
   max-width: 1200px;
 }
 
+.letter-spacing-tight {
+  letter-spacing: 0.04em;
+}
+
+/* Champs formulaires (auth & filtres) */
+.app-form-control {
+  border-color: rgba(15, 23, 42, 0.12);
+}
+
+.app-form-control::placeholder {
+  color: var(--app-text-muted);
+  opacity: 0.85;
+}
+
 /* --- Accessibilite : lien d'evitement --- */
 .app-skip-link {
   position: absolute;
@@ -260,24 +274,75 @@
   }
 }
 
-/* --- Auth (connexion) --- */
+/* --- Auth (connexion / inscription) — rendu type produit SaaS --- */
+.app-page-auth {
+  background:
+    radial-gradient(
+      ellipse 85% 55% at 50% -18%,
+      rgba(30, 90, 142, 0.14),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 60% 40% at 100% 0%,
+      rgba(37, 99, 168, 0.08),
+      transparent 45%
+    ),
+    var(--app-bg);
+}
+
+.app-page-auth .app-main {
+  max-width: 100%;
+}
+
 .app-auth-card {
-  border-radius: var(--app-radius) !important;
+  border-radius: 1rem !important;
   border: 1px solid var(--app-border) !important;
-  box-shadow: var(--app-shadow-md) !important;
+  box-shadow: var(--app-shadow-lg) !important;
   overflow: hidden;
+  background: var(--app-surface);
 }
 
 .app-auth-card .card-header {
   background: linear-gradient(
-    120deg,
-    var(--app-nav-from),
-    var(--app-nav-to)
+    125deg,
+    var(--app-nav-from) 0%,
+    var(--app-nav-to) 52%,
+    #2563a8 100%
   );
   color: #fff;
   font-weight: 700;
-  padding: 1.25rem 1.5rem;
+  font-size: 1.2rem;
+  letter-spacing: -0.02em;
+  padding: 1.35rem 1.5rem;
   border: none;
+}
+
+.app-input-group-password .form-control {
+  border-color: rgba(15, 23, 42, 0.12);
+}
+
+.app-input-group-password .form-control:focus {
+  z-index: 3;
+}
+
+.app-input-group-password .app-password-toggle {
+  border-color: rgba(15, 23, 42, 0.12);
+  background: var(--app-surface);
+  color: var(--app-text-muted);
+  padding-left: 0.85rem;
+  padding-right: 0.85rem;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.app-input-group-password .app-password-toggle:hover {
+  background: rgba(30, 90, 142, 0.06);
+  color: var(--bs-primary);
+  border-color: rgba(30, 90, 142, 0.25);
+}
+
+.app-input-group-password .app-password-toggle:focus-visible {
+  z-index: 4;
+  box-shadow: 0 0 0 0.2rem rgba(30, 90, 142, 0.2);
 }
 
 /* --- Listes / tableaux --- */

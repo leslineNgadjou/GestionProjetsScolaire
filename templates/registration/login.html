@@ -3,29 +3,32 @@
 {% block body_class %}app-page-auth{% endblock %}
 {% block content %}
   <div class="row justify-content-center">
-    <div class="col-12 col-md-10 col-lg-5">
-      <div class="card app-auth-card">
-        <div class="card-header">Connexion</div>
-        <div class="card-body p-4">
-          <p class="text-muted small mb-4">Accédez à votre espace pour postuler, publier des projets ou consulter les indicateurs.</p>
+    <div class="col-12 col-md-10 col-lg-5 col-xl-4">
+      <div class="card app-auth-card border-0">
+        <div class="card-header border-0 py-4">Connexion</div>
+        <div class="card-body p-4 pt-0">
+          <p class="text-body-secondary small mb-4">Accédez à votre espace pour postuler, publier des projets ou consulter les indicateurs.</p>
           {% if form.errors %}
-            <div class="alert alert-danger" role="alert">Identifiants invalides. Vérifiez votre nom d’utilisateur et votre mot de passe.</div>
+            <div class="alert alert-danger border-0 shadow-sm" role="alert">Identifiants invalides. Vérifiez votre nom d’utilisateur et votre mot de passe.</div>
           {% endif %}
           <form method="post" action="{% url 'login' %}" novalidate>
             {% csrf_token %}
             {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
             <div class="mb-3">
-              <label class="form-label fw-semibold" for="id_username">Nom d’utilisateur</label>
-              <input type="text" name="username" id="id_username" class="form-control form-control-lg" required autofocus autocomplete="username" placeholder="ex. prenom.nom">
+              <label class="form-label fw-semibold small text-uppercase text-body-secondary letter-spacing-tight" for="id_username">Nom d’utilisateur</label>
+              <input type="text" name="username" id="id_username" class="form-control form-control-lg app-form-control" required autofocus autocomplete="username" placeholder="ex. prenom.nom">
             </div>
             <div class="mb-4">
-              <label class="form-label fw-semibold" for="id_password">Mot de passe</label>
-              <input type="password" name="password" id="id_password" class="form-control form-control-lg" required autocomplete="current-password">
+              <label class="form-label fw-semibold small text-uppercase text-body-secondary letter-spacing-tight" for="id_password">Mot de passe</label>
+              <div class="input-group input-group-lg app-input-group-password">
+                <input type="password" name="password" id="id_password" class="form-control app-form-control" required autocomplete="current-password">
+                {% include "includes/password_toggle_button.html" with field_id="id_password" %}
+              </div>
             </div>
             <div class="d-grid gap-2">
-              <button type="submit" class="btn btn-primary btn-lg">Se connecter</button>
-              <a href="{% url 'register' %}" class="btn btn-outline-primary">Créer un compte étudiant</a>
-              <a href="{% url 'projects:list' %}" class="btn btn-link text-muted">Retour au catalogue des projets</a>
+              <button type="submit" class="btn btn-primary btn-lg rounded-pill py-2">Se connecter</button>
+              <a href="{% url 'register' %}" class="btn btn-outline-primary rounded-pill">Créer un compte étudiant</a>
+              <a href="{% url 'projects:list' %}" class="btn btn-link text-muted btn-sm">Retour au catalogue des projets</a>
             </div>
           </form>
         </div>

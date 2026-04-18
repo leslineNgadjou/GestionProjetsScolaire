@@ -27,20 +27,12 @@ class StudentRegistrationForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs.setdefault(
-            'class',
-            'form-control form-control-lg',
-        )
+        ctrl = 'form-control form-control-lg app-form-control'
+        self.fields['username'].widget.attrs.setdefault('class', ctrl)
         self.fields['username'].widget.attrs.setdefault('autocomplete', 'username')
-        self.fields['email'].widget.attrs.setdefault(
-            'class',
-            'form-control form-control-lg',
-        )
+        self.fields['email'].widget.attrs.setdefault('class', ctrl)
         for name in ('password1', 'password2'):
-            self.fields[name].widget.attrs.setdefault(
-                'class',
-                'form-control form-control-lg',
-            )
+            self.fields[name].widget.attrs.setdefault('class', ctrl)
             self.fields[name].widget.attrs.setdefault('autocomplete', 'new-password')
 
     def clean_email(self):
