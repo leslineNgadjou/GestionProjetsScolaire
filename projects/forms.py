@@ -34,7 +34,13 @@ class ProjectForm(forms.ModelForm):
                 attrs={'class': 'form-control app-form-control'},
             ),
             'max_students': forms.NumberInput(
-                attrs={'class': 'form-control app-form-control'},
+                attrs={
+                    'class': 'form-control app-form-control',
+                    'min': 1,
+                    'max': 500,
+                    'step': 1,
+                    'inputmode': 'numeric',
+                },
             ),
             'status': forms.Select(attrs={'class': 'form-select app-form-control'}),
         }
@@ -44,6 +50,18 @@ class ProjectForm(forms.ModelForm):
         if not title:
             raise ValidationError(_('Le titre ne peut pas être vide.'))
         return title
+
+    def clean_max_students(self):
+        value = self.cleaned_data.get('max_students')
+        if value is None:
+            return value
+        if value < 1:
+            raise ValidationError(
+                _('Le nombre de places doit être un entier positif (minimum 1).'),
+            )
+        if value > 500:
+            raise ValidationError(_('Le nombre de places ne peut pas dépasser 500.'))
+        return value
 
     def save(self, commit=True, *, teacher=None):
         """

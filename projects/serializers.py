@@ -28,6 +28,12 @@ class ProjectSerializer(serializers.ModelSerializer):
             'updated_at',
         ]
         read_only_fields = ['teacher', 'created_at', 'updated_at']
+        extra_kwargs = {
+            'max_students': {
+                'min_value': 1,
+                'max_value': 500,
+            },
+        }
 
     def create(self, validated_data):
         request = self.context['request']
