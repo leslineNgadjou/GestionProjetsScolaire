@@ -4,7 +4,7 @@ Document de synthèse pour reprise par un correcteur. Légende : **Fait** | **Pa
 
 | Exigence (sujet) | Statut | Fichiers / emplacement | Remarque |
 |------------------|--------|-------------------------|----------|
-| Authentification (login / logout) | **Fait** | `config/urls.py`, `templates/registration/login.html`, `settings.py` (`LOGIN_*`) | Redirection post-login vers le dashboard. |
+| Authentification (login / logout / inscription étudiant) | **Fait** | `config/urls.py`, `users/forms.py`, `users/views.py`, `templates/registration/login.html`, `register.html`, `settings.py` (`LOGIN_*`) | Inscription `/register/` : `UserCreationForm` + `EmailField` (format + unicité insensible à la casse), validateurs mot de passe Django, rôle `student` imposé, message flash + redirection dashboard (session ouverte). |
 | Rôles utilisateur (étudiant, enseignant, admin métier) | **Fait** | `users/models.py`, `core/mixins.py` | Distinct de `is_staff` / superuser Django. |
 | CRUD projets réservé enseignant + propriétaire | **Fait** | `projects/views.py`, `projects/mixins.py` | Mise à jour / suppression : queryset filtré. |
 | Liste publique projets **ouverts** uniquement | **Fait** | `projects/views.py` (`ProjectListView`) | |
@@ -32,6 +32,13 @@ Document de synthèse pour reprise par un correcteur. Légende : **Fait** | **Pa
 - [x] Validation modèle (`full_clean` / formulaires) pour règles métier clés
 - [x] Messages utilisateur sur succès / erreur / accès refusé
 - [x] Pas de mot de passe en clair dans le dépôt (mot de passe démo **uniquement** pour `seed_demo`, documenté)
+
+## Bonus implémentés (hors sujet minimal)
+
+| Bonus | Statut | Emplacement |
+|--------|--------|-------------|
+| API REST minimale (projets) | **Fait** | `GET/POST /api/projects/`, `GET /api/projects/<id>/`, DRF, `projects/api_views.py`, `serializers.py`, `permissions.py` |
+| Export CSV « mes projets » (enseignant) | **Fait** | `GET /projects/my/export-csv/`, `TeacherProjectsExportCSVView` |
 
 ## Pistes bonus (non requises)
 

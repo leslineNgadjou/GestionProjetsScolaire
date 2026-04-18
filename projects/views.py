@@ -1,9 +1,13 @@
 """Vues du module gestion des projets (liste publique, detail, CRUD enseignant)."""
 
+import csv
+
 from django.contrib import messages
+from django.http import HttpResponse
 from django.db.models import Q
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import DeleteView, DetailView, ListView
 from django.views.generic.edit import CreateView, UpdateView
 
@@ -164,3 +168,39 @@ class ProjectDeleteView(TeacherOwnedProjectsMixin, DeleteView):
             'Le projet a été supprimé avec succès.',
         )
         return super().delete(request, *args, **kwargs)
+
+
+class TeacherProjectsExportCSVView(TeacherRequiredMixin, View):
+    """
+    Export CSV des projets du enseignant connecte (bonus examen).
+
+    Colonnes : id, title, domain, status, max_students, created_at
+    """
+
+    http_method_names = ['get', 'head', 'options']
+
+    def get(self, request, *args, **kwargs):
+        response = HttpResponse(content_type='text/csv; charset=utf-8')
+        response['Content-Disposition'] = (
+            'attachment; filename="mes_projets_export.csv"'
+        )
+        writer = csv.writer(response)
+        writer.writerow(
+            ['id', 'title', 'domain', 'status', 'max_students', 'created_at'],
+        )
+        for project in (
+            Project.objects.filter(teacher=request.user)
+            .order_by('-created_at')
+            .iterator()
+        ):
+            writer.writerow(
+                [
+                    project.pk,
+                    project.title,
+                    project.domain,
+                    project.status,
+                    project.max_students,
+                    project.created_at.isoformat(),
+                ],
+            )
+        return response

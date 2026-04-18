@@ -7,6 +7,11 @@ from . import views
 app_name = 'projects'
 urlpatterns = [
     path('', views.ProjectListView.as_view(), name='list'),
+    path(
+        'my/export-csv/',
+        views.TeacherProjectsExportCSVView.as_view(),
+        name='export_csv',
+    ),
     path('my/', views.MyProjectListView.as_view(), name='my_list'),
     path('create/', views.ProjectCreateView.as_view(), name='create'),
     path('<int:pk>/edit/', views.ProjectUpdateView.as_view(), name='update'),

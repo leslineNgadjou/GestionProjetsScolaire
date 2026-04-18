@@ -15,6 +15,7 @@ Plateforme web **Django** pour la gestion de **projets universitaires** : public
 | Framework | Django 5.2 |
 | Base de données | SQLite (développement / démo) |
 | Front | Templates Django + **Bootstrap 5** |
+| API (bonus) | **Django REST framework** (`/api/…`) |
 | Config sensible | `python-dotenv` (fichier `.env`) |
 | Police | Plus Jakarta Sans (Google Fonts) |
 
@@ -114,11 +115,51 @@ Les autres comptes créés par `seed_demo` utilisent le même mot de passe ; voi
 
 ## Fonctionnalités principales
 
-- Authentification Django, rôles sur `users.User` (étudiant / enseignant / admin métier).
+- Authentification Django, rôles sur `users.User` (étudiant / enseignant / admin métier) ; **inscription étudiant** sur `/register/` (nom d’utilisateur, **e-mail validé**, mot de passe avec validateurs Django, rôle étudiant uniquement).
 - **Projets** : liste publique filtrée (statut **ouvert**), recherche, filtre domaine, pagination ; détail ; CRUD réservé à l’enseignant propriétaire.
 - **Candidatures** : dépôt sur projet ouvert, liste « mes candidatures », réception et traitement par l’enseignant concerné, respect de `max_students` à l’acceptation.
 - **Dashboard** : statistiques et raccourcis selon le rôle.
 - **Notifications simulées** : messages Django + logs (`applications` logger, console en développement).
+- **Bonus examen** : API REST minimale sur les projets ; export **CSV** des projets pour l’enseignant connecté.
+
+### API REST (projets)
+
+Préfixe : **`/api/`** (voir `projects/api_views.py`, `projects/serializers.py`).
+
+| Méthode | URL | Accès | Description |
+|--------|-----|--------|-------------|
+| GET | `/api/projects/` | Public (lecture) | Liste **paginée** (10 par page) : projets **ouverts** ; si connecté en tant qu’**enseignant**, inclut aussi **ses** projets (tous statuts). |
+| GET | `/api/projects/<id>/` | Public (lecture) | Détail si projet ouvert ou si vous êtes l’**enseignant** propriétaire. |
+| POST | `/api/projects/` | **Enseignant authentifié** | Création JSON (`title`, `description`, `domain`, `max_students`, `status`) ; l’enseignant est celui du compte. |
+
+Authentification pour POST (et lecture étendue enseignant) : **session** (navigateur connecté) ou **HTTP Basic** (ex. `curl`).
+
+**Exemples (serveur local)**
+
+```bash
+# Liste (anonyme)
+curl -s http://127.0.0.1:8000/api/projects/ | python -m json.tool
+
+# Détail
+curl -s http://127.0.0.1:8000/api/projects/1/ | python -m json.tool
+
+# Création (enseignant) — Basic auth
+curl -s -u teacher@univ.fr:password123 -H "Content-Type: application/json" \
+  -d "{\"title\":\"Sujet API\",\"description\":\"Description longue du sujet cree par curl pour valider l API.\",\"domain\":\"Info\",\"max_students\":3,\"status\":\"open\"}" \
+  http://127.0.0.1:8000/api/projects/
+```
+
+> Avec **SessionAuthentication** depuis le navigateur, un POST doit inclure le jeton **CSRF** Django ; pour des tests rapides, privilégier **Basic auth** ou `APIClient` / `force_authenticate` dans les tests.
+
+### Export CSV (mes projets)
+
+- **URL** : `/projects/my/export-csv/` (nom d’URL Django : `projects:export_csv`).
+- **Accès** : **enseignant** connecté uniquement (ses propres lignes ; **403** pour les autres rôles).
+- **Colonnes** : `id`, `title`, `domain`, `status`, `max_students`, `created_at`.
+- **Fichier téléchargé** : `mes_projets_export.csv`.
+- **UI** : bouton « Export CSV » sur la page **Mes projets** (`/projects/my/`).
+
+Téléchargement : ouvrir l’URL connecté en enseignant ou utiliser un lien depuis « Mes projets ».
 
 ## Structure du projet (aperçu)
 
@@ -166,7 +207,7 @@ python manage.py test projects applications dashboard users
 SECRET_KEY=test-secret-key python manage.py test projects applications dashboard users
 ```
 
-Couverture indicative : modèles `Project` / `Application`, liste publique, création de projet (enseignant), refus d’accès étudiant au CRUD projet, candidature, doublon, acceptation réservée au bon enseignant, dashboard par rôle, helpers utilisateur.
+Couverture indicative : modèles `Project` / `Application`, liste publique, création de projet (enseignant), refus d’accès étudiant au CRUD projet, candidature, doublon, acceptation réservée au bon enseignant, dashboard par rôle, helpers utilisateur, **API REST** (GET liste, POST enseignant / refus étudiant), **export CSV** enseignant.
 
 ## Sécurité (rappels examen)
 

@@ -1,3 +1,4 @@
 # Django 5.2 LTS line — pin en examen pour des installs reproductibles
 Django>=5.2,<5.3
+djangorestframework>=3.15,<3.17
 python-dotenv>=1.0,<2
