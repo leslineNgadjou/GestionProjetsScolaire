@@ -92,7 +92,7 @@ Crée notamment :
 - 1 administrateur (`admin@univ.fr`)
 - 2 enseignants (`teacher@univ.fr`, `teacher2@univ.fr`)
 - 4 étudiants (`student@univ.fr`, …)
-- Plusieurs projets (ouverts, fermés, terminés)
+- 9 projets ouverts, 1 fermé, 1 terminé (descriptions détaillées, domaines variés pour tester filtres et pagination)
 - Des candidatures aux statuts variés
 
 **Mot de passe unique pour tous ces comptes de démo :** `password123`

@@ -15,6 +15,11 @@ MOTIVATION = (
     'similaires en equipe. Je souhaite approfondir mes competences.'
 )
 
+MOTIVATION_SHORT = (
+    'Projet aligne avec mon parcours : je souhaite contribuer et apprendre '
+    'sur la duree du semestre.'
+)
+
 
 class Command(BaseCommand):
     help = (
@@ -69,23 +74,122 @@ class Command(BaseCommand):
         p_open_t1 = self._upsert_project(
             teacher=t1,
             title='[DEMO] Analyse de donnees pedagogiques',
-            domain='Data science',
-            max_students=3,
+            domain='Science des donnees',
+            max_students=4,
             status=Project.Status.OPEN,
+            description_extra=(
+                'Tableaux de bord pour suivre l’engagement des groupes, exports CSV '
+                'et indicateurs par enseignant. Idéal pour valider la chaîne ETL et la '
+                'visualisation sous contrainte RGPD (données anonymisées).'
+            ),
         )
         p_open_t2 = self._upsert_project(
             teacher=t2,
             title='[DEMO] Application web de suivi de stage',
             domain='Developpement web',
-            max_students=2,
+            max_students=3,
             status=Project.Status.OPEN,
+            description_extra=(
+                'Stack Django / API REST : conventions de code, revues et livraisons '
+                'par sprints. Les étudiants intègrent auth, rôles et notifications '
+                'simulées pour coller à un produit SaaS interne.'
+            ),
         )
+        p_open_t1b = self._upsert_project(
+            teacher=t1,
+            title='[DEMO] Tableau de bord carbone pour le campus',
+            domain='Science des donnees',
+            max_students=3,
+            status=Project.Status.OPEN,
+            description_extra=(
+                'Modélisation des flux énergétiques bâtiments, jeux de données '
+                'ouverts et scénarios “what-if”. Restitution attendue : rapport + '
+                'prototype de calcul des indicateurs.'
+            ),
+        )
+        p_open_t1c = self._upsert_project(
+            teacher=t1,
+            title='[DEMO] API securisee pour emplois du temps',
+            domain='Developpement web',
+            max_students=4,
+            status=Project.Status.OPEN,
+            description_extra=(
+                'Conception d’une API versionnée (pagination, erreurs structurées) et '
+                'd’un client léger. Thèmes : OAuth2 simplifié, quotas et journaux '
+                'd’audit pour l’administration.'
+            ),
+        )
+        p_open_t1d = self._upsert_project(
+            teacher=t1,
+            title='[DEMO] Refonte UX du portail etudiant',
+            domain='UX et design produit',
+            max_students=3,
+            status=Project.Status.OPEN,
+            description_extra=(
+                'Interviews utilisateurs, parcours critiques et maquettes testables. '
+                'Livrables : design system minimal, tests d’utilisabilité et backlog '
+                'priorisé pour une équipe dev.'
+            ),
+        )
+        p_open_t2b = self._upsert_project(
+            teacher=t2,
+            title="[DEMO] Detection d'anomalies sur journaux SI",
+            domain='Cybersecurite',
+            max_students=3,
+            status=Project.Status.OPEN,
+            description_extra=(
+                'Jeux de logs synthétiques, règles de détection et scoring de risque. '
+                'Introduction à la corrélation d’événements et à la restitution pour '
+                'un SOC pédagogique.'
+            ),
+        )
+        p_open_t2c = self._upsert_project(
+            teacher=t2,
+            title='[DEMO] Capteurs LoRa pour agriculture urbaine',
+            domain='IoT et systemes embarques',
+            max_students=4,
+            status=Project.Status.OPEN,
+            description_extra=(
+                'Acquisition bas débit, passerelle et télémétrie vers une base '
+                'série temporelle. Focus robustesse, autonomie batterie et '
+                'visualisation des séries sur plusieurs parcelles fictives.'
+            ),
+        )
+        p_open_t2d = self._upsert_project(
+            teacher=t2,
+            title='[DEMO] Pipeline NLP pour revues de litterature',
+            domain='Machine learning',
+            max_students=3,
+            status=Project.Status.OPEN,
+            description_extra=(
+                'Extraction d’entités, clustering thématique et synthèses assistées. '
+                'Données : corpus bibliographique public filtré. Éthique et biais des '
+                'modèles discutés en restitution.'
+            ),
+        )
+        p_open_t2e = self._upsert_project(
+            teacher=t2,
+            title='[DEMO] Serious game de revision L3 mathematiques',
+            domain='Developpement web',
+            max_students=5,
+            status=Project.Status.OPEN,
+            description_extra=(
+                'Gameplay court, progression par compétences et tableau de bord '
+                'enseignant. Front responsive (Bootstrap) et suivi des scores pour '
+                'ajuster la difficulté.'
+            ),
+        )
+
         p_closed = self._upsert_project(
             teacher=t1,
             title='[DEMO] Projet blockchain (archive)',
             domain='Blockchain',
             max_students=2,
             status=Project.Status.CLOSED,
+            description_extra=(
+                'Archive de demo : smart-contracts expliqués, pas de mise en prod. '
+                'Conservé pour tester l’affichage des projets fermés côté enseignant.'
+            ),
         )
         p_done = self._upsert_project(
             teacher=t2,
@@ -93,6 +197,10 @@ class Command(BaseCommand):
             domain='Machine learning',
             max_students=4,
             status=Project.Status.COMPLETED,
+            description_extra=(
+                'Campagne clôturée : jeux de données scoring offline et métriques '
+                'de ranking. Sert de référence “terminé” dans les filtres enseignant.'
+            ),
         )
 
         s1, s2, s3, s4 = students
@@ -101,13 +209,26 @@ class Command(BaseCommand):
         self._upsert_application(s2, p_open_t1, Application.Status.ACCEPTED, MOTIVATION)
         self._upsert_application(s3, p_open_t2, Application.Status.PENDING, MOTIVATION)
         self._upsert_application(s4, p_open_t2, Application.Status.REJECTED, MOTIVATION)
-        self._upsert_application(s1, p_open_t2, Application.Status.PENDING, MOTIVATION)
+        self._upsert_application(s1, p_open_t2, Application.Status.PENDING, MOTIVATION_SHORT)
         self._upsert_application(s2, p_closed, Application.Status.ACCEPTED, MOTIVATION)
+
+        self._upsert_application(s3, p_open_t1b, Application.Status.PENDING, MOTIVATION_SHORT)
+        self._upsert_application(s4, p_open_t1c, Application.Status.PENDING, MOTIVATION)
+        self._upsert_application(s1, p_open_t2b, Application.Status.PENDING, MOTIVATION_SHORT)
+        self._upsert_application(s2, p_open_t2c, Application.Status.ACCEPTED, MOTIVATION)
+        self._upsert_application(s3, p_open_t2d, Application.Status.PENDING, MOTIVATION)
+        self._upsert_application(s4, p_open_t1d, Application.Status.PENDING, MOTIVATION_SHORT)
+        self._upsert_application(s1, p_open_t2e, Application.Status.PENDING, MOTIVATION)
 
         self.stdout.write(self.style.SUCCESS('Donnees de demo chargees.'))
         self.stdout.write(f'  Admin : {admin.username} / {DEMO_PASSWORD}')
         self.stdout.write(f'  Enseignants : {t1.username}, {t2.username} / {DEMO_PASSWORD}')
-        self.stdout.write(f'  Etudiants : {s1.username} … {s4.username} / {DEMO_PASSWORD}')
+        self.stdout.write(f'  Etudiants : {s1.username} ... {s4.username} / {DEMO_PASSWORD}')
+        self.stdout.write(
+            self.style.NOTICE(
+                '  Catalogue public : 9 projets ouverts (filtres domaine / recherche).'
+            )
+        )
 
     def _upsert_user(self, username, email, role, **extra):
         user, created = User.objects.get_or_create(
@@ -128,18 +249,34 @@ class Command(BaseCommand):
         self.stdout.write(f'  Utilisateur {action} : {username} ({role})')
         return user
 
-    def _upsert_project(self, teacher, title, domain, max_students, status):
+    def _upsert_project(
+        self,
+        teacher,
+        title,
+        domain,
+        max_students,
+        status,
+        *,
+        description_extra=None,
+    ):
+        if description_extra:
+            description = (
+                f'{description_extra} Contexte académique : équipe de 2 à 4 étudiants, '
+                f'restitution sous forme de démo et rapport court (≈ 15 pages).'
+            )
+        else:
+            description = f'Description de demonstration pour « {title} ».'
         project, created = Project.objects.get_or_create(
             teacher=teacher,
             title=title,
             defaults={
-                'description': f'Description de demonstration pour « {title} ».',
+                'description': description,
                 'domain': domain,
                 'max_students': max_students,
                 'status': status,
             },
         )
-        project.description = f'Description de demonstration pour « {title} ».'
+        project.description = description
         project.domain = domain
         project.max_students = max_students
         project.status = status
