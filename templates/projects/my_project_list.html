@@ -6,12 +6,18 @@
       <h1 class="h2 app-page-title mb-2">Mes projets</h1>
       <p class="text-muted mb-0 small">Projets dont vous êtes responsable — tous statuts confondus.</p>
     </div>
-    <a href="{% url 'projects:create' %}" class="btn btn-primary flex-shrink-0">Nouveau projet</a>
+    <a href="{% url 'projects:create' %}" class="btn btn-primary btn-lg flex-shrink-0">Nouveau projet</a>
   </header>
 
   {% if not project_list %}
-    <p class="text-muted">Vous n’avez pas encore créé de projet.</p>
-    <a href="{% url 'projects:create' %}" class="btn btn-outline-primary">Créer un projet</a>
+    <div class="card app-card app-empty-state mb-0">
+      <div class="card-body text-center py-5 px-4">
+        <div class="app-empty-icon" aria-hidden="true">+</div>
+        <p class="fw-semibold mb-1">Aucun projet pour l’instant</p>
+        <p class="text-muted small mb-4">Créez votre première fiche projet pour recevoir des candidatures.</p>
+        <a href="{% url 'projects:create' %}" class="btn btn-primary btn-lg">Créer un projet</a>
+      </div>
+    </div>
   {% else %}
     <div class="row g-3">
       {% for project in project_list %}

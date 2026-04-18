@@ -22,13 +22,20 @@
       </select>
     </div>
     <div class="col-12 col-md-3 d-flex flex-wrap gap-2">
-      <button type="submit" class="btn btn-primary flex-grow-1">Filtrer</button>
+      <button type="submit" class="btn btn-primary btn-lg flex-grow-1">Filtrer</button>
       <a href="{% url 'projects:list' %}" class="btn btn-outline-secondary">Réinitialiser</a>
     </div>
   </form>
 
   {% if not project_list %}
-    <p class="text-muted mb-0">Aucun projet ouvert ne correspond à vos critères.</p>
+    <div class="card app-card app-empty-state mb-0">
+      <div class="card-body text-center py-5 px-4">
+        <div class="app-empty-icon" aria-hidden="true">∅</div>
+        <p class="fw-semibold mb-1">Aucun projet à afficher</p>
+        <p class="text-muted small mb-4">Aucun projet ouvert ne correspond à vos critères. Élargissez la recherche ou réinitialisez les filtres.</p>
+        <a href="{% url 'projects:list' %}" class="btn btn-outline-primary">Réinitialiser les filtres</a>
+      </div>
+    </div>
   {% else %}
     <div class="row g-3">
       {% for project in project_list %}

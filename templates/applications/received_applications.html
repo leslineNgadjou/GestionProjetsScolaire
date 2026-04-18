@@ -7,10 +7,17 @@
   </header>
 
   {% if not applications %}
-    <p class="text-muted">Aucune candidature pour le moment.</p>
+    <div class="card app-card app-empty-state mb-0">
+      <div class="card-body text-center py-5 px-4">
+        <div class="app-empty-icon" aria-hidden="true">◇</div>
+        <p class="fw-semibold mb-1">Aucune candidature reçue</p>
+        <p class="text-muted small mb-4">Les dossiers déposés sur vos projets apparaîtront ici.</p>
+        <a href="{% url 'projects:my_list' %}" class="btn btn-outline-primary btn-lg">Mes projets</a>
+      </div>
+    </div>
   {% else %}
     <div class="table-responsive d-none d-lg-block">
-      <table class="table table-hover align-middle">
+      <table class="table table-hover align-middle app-data-table">
         <thead class="table-light">
           <tr>
             <th scope="col">Projet</th>
