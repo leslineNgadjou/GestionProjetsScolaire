@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Connexion — {{ block.super }}{% endblock %}
+{% block content %}
+  <h1 class="h3 mb-3">Connexion</h1>
+  {% if form.errors %}
+    <div class="alert alert-danger">Identifiants invalides. Vérifiez vos données.</div>
+  {% endif %}
+  <form method="post" action="{% url 'login' %}" class="col-md-6">
+    {% csrf_token %}
+    {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+    <div class="mb-3">
+      <label class="form-label" for="id_username">Nom d'utilisateur</label>
+      <input type="text" name="username" id="id_username" class="form-control" required autofocus>
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="id_password">Mot de passe</label>
+      <input type="password" name="password" id="id_password" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Se connecter</button>
+  </form>
+{% endblock %}

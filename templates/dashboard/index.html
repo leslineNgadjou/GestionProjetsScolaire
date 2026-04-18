@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Tableau de bord — {{ block.super }}{% endblock %}
+{% block content %}
+  <h1 class="h3 mb-3">Tableau de bord</h1>
+  <p>Connecté en tant que <strong>{{ user.get_username }}</strong> ({{ user.get_role_display }}).</p>
+  <p class="text-muted small">La logique par rôle (étudiant / enseignant / admin) viendra ici.</p>
+{% endblock %}
