@@ -57,10 +57,25 @@ class Project(models.Model):
     def __str__(self) -> str:
         return self.title
 
+    def get_absolute_url(self):
+        from django.urls import reverse
+
+        return reverse('projects:detail', kwargs={'pk': self.pk})
+
     @property
     def is_accepting_applications(self) -> bool:
         """Indique si de nouvelles candidatures étudiantes sont permises."""
         return self.status == self.Status.OPEN
+
+    def accepted_applications_count(self) -> int:
+        """Nombre de candidatures acceptees sur ce projet."""
+        return self.project_applications.filter(
+            status='accepted',
+        ).count()
+
+    def can_accept_more_students(self) -> bool:
+        """True si une nouvelle candidature peut encore etre acceptee (places restantes)."""
+        return self.accepted_applications_count() < self.max_students
 
     def clean(self) -> None:
         super().clean()

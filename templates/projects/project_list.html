@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block nav_projects_active %}active{% endblock %}
+{% block title %}Projets ouverts — {{ block.super }}{% endblock %}
+{% block content %}
+  <header class="app-page-header">
+    <h1 class="h2 app-page-title">Projets ouverts aux candidatures</h1>
+    <p class="text-muted mb-0">Recherchez par titre ou filtrez par domaine. Seuls les projets <strong>ouverts</strong> sont listés ici.</p>
+  </header>
+
+  <form method="get" class="app-filter-panel row g-3 align-items-end mb-4" action="{% url 'projects:list' %}">
+    <div class="col-12 col-md-5">
+      <label class="form-label" for="id_q">Recherche par titre</label>
+      <input type="search" name="q" id="id_q" class="form-control" value="{{ current_q }}" placeholder="Mots-clés…" autocomplete="off">
+    </div>
+    <div class="col-12 col-md-4">
+      <label class="form-label" for="id_domain">Domaine</label>
+      <select name="domain" id="id_domain" class="form-select">
+        <option value="">Tous les domaines</option>
+        {% for d in domain_choices %}
+          <option value="{{ d }}" {% if d == current_domain %}selected{% endif %}>{{ d }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-12 col-md-3 d-flex flex-wrap gap-2">
+      <button type="submit" class="btn btn-primary flex-grow-1">Filtrer</button>
+      <a href="{% url 'projects:list' %}" class="btn btn-outline-secondary">Réinitialiser</a>
+    </div>
+  </form>
+
+  {% if not project_list %}
+    <p class="text-muted mb-0">Aucun projet ouvert ne correspond à vos critères.</p>
+  {% else %}
+    <div class="row g-3">
+      {% for project in project_list %}
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="card app-card h-100">
+            <div class="card-body d-flex flex-column">
+              <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                <h2 class="h5 card-title mb-0">{{ project.title }}</h2>
+                {% include "projects/_status_badge.html" with status=project.status %}
+              </div>
+              <p class="text-muted small mb-2">
+                {{ project.domain }} · {{ project.teacher.get_full_name|default:project.teacher.username }}
+              </p>
+              <p class="card-text small text-body-secondary flex-grow-1">{{ project.description|truncatewords:32 }}</p>
+              <p class="small mb-3"><span class="fw-semibold">Places :</span> {{ project.max_students }}</p>
+              <a href="{% url 'projects:detail' project.pk %}" class="btn btn-outline-primary btn-sm mt-auto align-self-start">Voir le détail</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+      <nav class="mt-4" aria-label="Pagination des projets">
+        <ul class="pagination justify-content-center flex-wrap mb-0">
+          {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page=1&amp;q={{ current_q|urlencode }}&amp;domain={{ current_domain|urlencode }}">Première</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.previous_page_number }}&amp;q={{ current_q|urlencode }}&amp;domain={{ current_domain|urlencode }}">Précédent</a>
+            </li>
+          {% endif %}
+          <li class="page-item active" aria-current="page">
+            <span class="page-link">{{ page_obj.number }} / {{ paginator.num_pages }}</span>
+          </li>
+          {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}&amp;q={{ current_q|urlencode }}&amp;domain={{ current_domain|urlencode }}">Suivant</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="?page={{ paginator.num_pages }}&amp;q={{ current_q|urlencode }}&amp;domain={{ current_domain|urlencode }}">Dernière</a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+  {% endif %}
+{% endblock %}
