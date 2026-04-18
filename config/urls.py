@@ -23,3 +23,7 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),
     path('', include('core.urls')),
 ]
+
+handler404 = 'core.views.error_404'
+handler403 = 'core.views.error_403'
+handler500 = 'core.views.error_500'

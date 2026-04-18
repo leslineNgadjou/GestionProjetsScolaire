@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Erreur serveur — {{ block.super }}{% endblock %}
+{% block content %}
+  <div class="app-error-page text-center py-5 px-3 mx-auto" style="max-width: 36rem;">
+    <p class="text-uppercase small text-muted fw-bold mb-2 letter-spacing">Erreur 500</p>
+    <h1 class="h2 fw-bold mb-3">Problème temporaire</h1>
+    <p class="text-muted mb-4">
+      Une erreur interne s’est produite. Vous pouvez réessayer dans quelques instants.
+      Si le problème persiste, signalez-le à l’équipe technique.
+    </p>
+    <div class="d-flex flex-column flex-sm-row flex-wrap justify-content-center gap-2">
+      <a href="{% url 'core:home' %}" class="btn btn-primary btn-lg">Accueil</a>
+      <a href="{% url 'projects:list' %}" class="btn btn-outline-primary btn-lg">Projets ouverts</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'dashboard:index' %}" class="btn btn-outline-secondary btn-lg">Tableau de bord</a>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
