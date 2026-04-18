@@ -45,6 +45,50 @@
     });
   }
 
+  /**
+   * Champs entiers strictement positifs (saisie chiffres uniquement, pas de "e" ni "--").
+   * Attributs : data-app-digits-only, optionnellement data-app-int-min / data-app-int-max.
+   */
+  function initDigitsOnlyIntInputs() {
+    document.querySelectorAll('[data-app-digits-only]').forEach(function (el) {
+      if (el.dataset.appDigitsWired) {
+        return;
+      }
+      el.dataset.appDigitsWired = '1';
+      var minV = parseInt(el.getAttribute('data-app-int-min'), 10);
+      var maxV = parseInt(el.getAttribute('data-app-int-max'), 10);
+      if (Number.isNaN(minV)) minV = 1;
+      if (Number.isNaN(maxV)) maxV = 2147483647;
+
+      function stripToDigits() {
+        var raw = el.value.replace(/\D/g, '');
+        if (raw !== el.value) {
+          el.value = raw;
+        }
+      }
+
+      el.addEventListener('input', stripToDigits);
+      el.addEventListener('blur', function () {
+        stripToDigits();
+        if (el.value === '') {
+          return;
+        }
+        var n = parseInt(el.value, 10);
+        if (Number.isNaN(n)) {
+          el.value = '';
+          return;
+        }
+        if (n < minV) {
+          el.value = String(minV);
+        } else if (n > maxV) {
+          el.value = String(maxV);
+        } else {
+          el.value = String(n);
+        }
+      });
+    });
+  }
+
   function initPasswordToggles() {
     document.querySelectorAll('[data-app-password-toggle]').forEach(function (btn) {
       var targetId = btn.getAttribute('data-app-password-toggle');
@@ -75,6 +119,7 @@
 
   function init() {
     initThemeToggle();
+    initDigitsOnlyIntInputs();
     initPasswordToggles();
   }
 

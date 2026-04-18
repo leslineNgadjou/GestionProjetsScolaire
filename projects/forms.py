@@ -20,6 +20,27 @@ class ProjectForm(forms.ModelForm):
     La cohérence du rôle enseignant est toutefois garantie par ``Project.clean()``.
     """
 
+    _max_field = Project._meta.get_field('max_students')
+
+    max_students = forms.IntegerField(
+        min_value=1,
+        max_value=500,
+        label=_max_field.verbose_name,
+        help_text=_max_field.help_text,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control app-form-control',
+                'inputmode': 'numeric',
+                'autocomplete': 'off',
+                'maxlength': '3',
+                'placeholder': '1 – 500',
+                'data-app-digits-only': '1',
+                'data-app-int-min': '1',
+                'data-app-int-max': '500',
+            },
+        ),
+    )
+
     class Meta:
         model = Project
         fields = ['title', 'description', 'domain', 'max_students', 'status']
@@ -33,15 +54,6 @@ class ProjectForm(forms.ModelForm):
             'domain': forms.TextInput(
                 attrs={'class': 'form-control app-form-control'},
             ),
-            'max_students': forms.NumberInput(
-                attrs={
-                    'class': 'form-control app-form-control',
-                    'min': 1,
-                    'max': 500,
-                    'step': 1,
-                    'inputmode': 'numeric',
-                },
-            ),
             'status': forms.Select(attrs={'class': 'form-select app-form-control'}),
         }
 
@@ -50,18 +62,6 @@ class ProjectForm(forms.ModelForm):
         if not title:
             raise ValidationError(_('Le titre ne peut pas être vide.'))
         return title
-
-    def clean_max_students(self):
-        value = self.cleaned_data.get('max_students')
-        if value is None:
-            return value
-        if value < 1:
-            raise ValidationError(
-                _('Le nombre de places doit être un entier positif (minimum 1).'),
-            )
-        if value > 500:
-            raise ValidationError(_('Le nombre de places ne peut pas dépasser 500.'))
-        return value
 
     def save(self, commit=True, *, teacher=None):
         """
