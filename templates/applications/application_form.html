@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}{{ form_title }} — {{ block.super }}{% endblock %}
+{% block content %}
+  <div class="mb-3">
+    <a href="{{ project.get_absolute_url }}" class="text-decoration-none small fw-semibold">← Retour au projet</a>
+  </div>
+
+  <header class="app-page-header">
+    <h1 class="h2 app-page-title">{{ form_title }}</h1>
+    <p class="text-muted mb-0">
+      Projet : <strong>{{ project.title }}</strong> — <span class="text-body-secondary">{{ project.domain }}</span>
+    </p>
+  </header>
+
+  <form method="post" novalidate class="col-12 col-lg-8 card app-card">
+    <div class="card-body p-4 p-lg-4">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+    {% endif %}
+    {% for field in form %}
+      <div class="mb-3">
+        {% if field.name != 'project' or not field.is_hidden %}
+          <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {% endif %}
+        {{ field }}
+        {% if field.errors %}
+          <div class="invalid-feedback d-block">{{ field.errors|striptags }}</div>
+        {% endif %}
+        {% if field.help_text and not field.is_hidden %}
+          <div class="form-text">{{ field.help_text }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <div class="d-flex flex-wrap gap-2 pt-1">
+      <button type="submit" class="btn btn-primary">Envoyer ma candidature</button>
+      <a href="{{ project.get_absolute_url }}" class="btn btn-outline-secondary">Annuler</a>
+    </div>
+    </div>
+  </form>
+{% endblock %}

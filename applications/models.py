@@ -65,6 +65,11 @@ class Application(models.Model):
     def __str__(self) -> str:
         return f'{self.student} → {self.project}'
 
+    def get_absolute_url(self):
+        from django.urls import reverse
+
+        return reverse('applications:detail', kwargs={'pk': self.pk})
+
     def clean(self) -> None:
         super().clean()
         if self.student_id and self.student.role != User.Role.STUDENT:

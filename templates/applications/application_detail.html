@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Candidature — {{ block.super }}{% endblock %}
+{% block content %}
+  <div class="mb-4 d-flex flex-wrap gap-2 align-items-center">
+    {% if user.is_student %}
+      <a href="{% url 'applications:mine' %}" class="text-decoration-none small">← Mes candidatures</a>
+    {% elif user.is_teacher %}
+      <a href="{% url 'applications:received' %}" class="text-decoration-none small">← Candidatures reçues</a>
+    {% endif %}
+    <span class="small text-muted ms-auto">{% include "applications/_application_status_badge.html" with status=application.status %}</span>
+  </div>
+
+  <div class="card app-card mb-4">
+    <div class="card-body p-4">
+  <h1 class="h4 mb-3 app-page-title">Candidature</h1>
+
+  <dl class="row mb-4 small mb-lg-0">
+    <dt class="col-sm-4 col-md-3 text-muted">Projet</dt>
+    <dd class="col-sm-8 col-md-9">
+      <a href="{{ application.project.get_absolute_url }}">{{ application.project.title }}</a>
+    </dd>
+    <dt class="col-sm-4 col-md-3 text-muted">Domaine</dt>
+    <dd class="col-sm-8 col-md-9">{{ application.project.domain }}</dd>
+    <dt class="col-sm-4 col-md-3 text-muted">Étudiant</dt>
+    <dd class="col-sm-8 col-md-9">{{ application.student.get_full_name|default:application.student.username }}</dd>
+    <dt class="col-sm-4 col-md-3 text-muted">Date de candidature</dt>
+    <dd class="col-sm-8 col-md-9">{{ application.applied_at|date:"d/m/Y à H:i" }}</dd>
+    <dt class="col-sm-4 col-md-3 text-muted">Dernière mise à jour</dt>
+    <dd class="col-sm-8 col-md-9">{{ application.updated_at|date:"d/m/Y à H:i" }}</dd>
+  </dl>
+
+  <h2 class="h6 text-muted text-uppercase">Motivation</h2>
+  <div class="border rounded-3 p-3 bg-body-secondary bg-opacity-50 mb-0">{{ application.motivation|linebreaks }}</div>
+    </div>
+  </div>
+
+  {% if can_teacher_act %}
+    <div class="card app-card mb-3">
+      <div class="card-body py-3">
+    <div class="alert alert-info py-2 small mb-3 border-0" role="status">
+      Places acceptées sur ce projet :
+      <strong>{{ application.project.accepted_applications_count }}</strong> /
+      {{ application.project.max_students }}.
+      {% if project_capacity_reached %}
+        <span class="d-block mt-1 text-danger">Capacité maximale atteinte — vous ne pouvez plus accepter de candidature.</span>
+      {% endif %}
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+      {% if not project_capacity_reached %}
+        <form method="post" action="{% url 'applications:accept' application.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-success">Accepter</button>
+        </form>
+      {% else %}
+        <button type="button" class="btn btn-success" disabled title="Capacité maximale atteinte">Accepter</button>
+      {% endif %}
+      <form method="post" action="{% url 'applications:reject' application.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-danger">Refuser</button>
+      </form>
+    </div>
+      </div>
+    </div>
+  {% elif user.is_teacher and application.project.teacher_id == user.id and application.status != 'pending' %}
+    <p class="text-muted small mb-0">Cette candidature a déjà été traitée.</p>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Candidatures reçues — {{ block.super }}{% endblock %}
+{% block content %}
+  <header class="app-page-header">
+    <h1 class="h2 app-page-title">Candidatures reçues</h1>
+    <p class="text-muted small mb-0">Dossiers déposés sur <strong>vos</strong> projets. Les actions Accepter / Refuser concernent uniquement les candidatures <strong>en attente</strong>.</p>
+  </header>
+
+  {% if not applications %}
+    <p class="text-muted">Aucune candidature pour le moment.</p>
+  {% else %}
+    <div class="table-responsive d-none d-lg-block">
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th scope="col">Projet</th>
+            <th scope="col">Étudiant</th>
+            <th scope="col">Statut</th>
+            <th scope="col">Date</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for app in applications %}
+            <tr>
+              <td class="fw-medium">{{ app.project.title }}</td>
+              <td>{{ app.student.get_full_name|default:app.student.username }}</td>
+              <td>{% include "applications/_application_status_badge.html" with status=app.status %}</td>
+              <td class="text-muted small">{{ app.applied_at|date:"d/m/Y H:i" }}</td>
+              <td>
+                <a href="{% url 'applications:detail' app.pk %}" class="btn btn-sm btn-outline-primary">Détail</a>
+                {% if app.status == 'pending' %}
+                  <form class="d-inline" method="post" action="{% url 'applications:accept' app.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-success">Accepter</button>
+                  </form>
+                  <form class="d-inline" method="post" action="{% url 'applications:reject' app.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Refuser</button>
+                  </form>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="d-lg-none">
+      {% for app in applications %}
+        <div class="card app-card mb-3">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+              <div>
+                <h2 class="h6 mb-1">{{ app.project.title }}</h2>
+                <p class="small text-muted mb-0">{{ app.student.get_full_name|default:app.student.username }}</p>
+              </div>
+              {% include "applications/_application_status_badge.html" with status=app.status %}
+            </div>
+            <p class="small text-muted mb-3">{{ app.applied_at|date:"d/m/Y H:i" }}</p>
+            <div class="d-flex flex-wrap gap-2">
+              <a href="{% url 'applications:detail' app.pk %}" class="btn btn-sm btn-outline-primary">Détail</a>
+              {% if app.status == 'pending' %}
+                <form class="d-inline" method="post" action="{% url 'applications:accept' app.pk %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-success">Accepter</button>
+                </form>
+                <form class="d-inline" method="post" action="{% url 'applications:reject' app.pk %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-danger">Refuser</button>
+                </form>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+      <nav class="mt-3" aria-label="Pagination">
+        <ul class="pagination justify-content-center flex-wrap mb-0">
+          {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Précédent</a></li>
+          {% endif %}
+          <li class="page-item active"><span class="page-link">{{ page_obj.number }} / {{ paginator.num_pages }}</span></li>
+          {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Suivant</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,9 @@
+{% if status == 'pending' %}
+  <span class="badge text-bg-warning text-dark">En attente</span>
+{% elif status == 'accepted' %}
+  <span class="badge text-bg-success">Acceptée</span>
+{% elif status == 'rejected' %}
+  <span class="badge text-bg-danger">Refusée</span>
+{% else %}
+  <span class="badge text-bg-light text-dark">{{ status }}</span>
+{% endif %}
